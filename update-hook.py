@@ -19,6 +19,8 @@ def changed_files(old,new):
 
 (ref,old,new) = sys.argv[1:4]
 
+print('starting processing of commit')
+
 for c in changed_files(old,new):
    action = c[0]
    file = c[1]
