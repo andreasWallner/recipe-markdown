@@ -65,27 +65,30 @@ def parseFile(stream):
         elif state == State.Ingredients:
             if start == '!':
                 state = State.FinishRecipe
+                recipe.phases.append(phase)
+                phase = Phase()
                 continue
+
             if start == '*':
                 state = State.Steps
                 continue
+
             if start == '#':
                 phase.ingredients.append(parseIngredient(line))
 
         elif state == State.Steps:
-            if start == '!':
-                state = State.FinishRecipe
+            if start == '!' or start == '#':
+                if start == '!':
+                    state = State.FinishRecipe
+                else:
+                    state = State.Ingredients
+                recipe.phases.append(phase)
+                phase = Phase()
                 continue
-            if start == '#':
-                state = State.FinishPhase
-                continue
+
             if start == '*':
                 phase.steps.append(Step(line.lstrip('* \t')))
         
-        elif state == State.FinishPhase:
-            recipe.phases.append(phase)
-            phase = Phase()
-            state = State.Ingredients
 
         elif state == State.FinishRecipe:
             recipes.append(recipe)
@@ -95,6 +98,8 @@ def parseFile(stream):
         line = stream.readline()
         if line == '':
             if state != State.Meta:
+                if state == State.Steps or state == State.Ingredients:
+                    recipe.phases.append(phase)
                 recipes.append(recipe)
             break
         line = line.strip(' \t\n')

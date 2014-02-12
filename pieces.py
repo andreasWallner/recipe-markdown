@@ -41,7 +41,12 @@ class Hint(object):
         return 'Step({})'.format(self.text)
 
 class Phase(object):
-    def __init__( self, ingredients = [], steps = []):
+    def __init__( self, ingredients = None, steps = None):
+        if ingredients is None:
+            ingredients = []
+        if steps is None:
+            steps = []
+
         self.ingredients = ingredients
         self.steps = steps
 
