@@ -4,7 +4,15 @@ import os
 import sys
 import subprocess
 
-TARGET='/home/uhu01/try/'
+from parser import parseFile
+from serializer import serializeRecipes
+
+TARGET='/var/www/localhost/htdocs/uhu01/fh/'
+
+def process( file, target):
+    r = parseFile(file)
+    e = etree.ElementTree(serializeRecipes(r))
+    e.write(target,xml_declaration=True,pretty_print=True,encoding='UTF-8')
 
 def changed_files(old,new):
    environ = os.environ.copy()
@@ -21,6 +29,14 @@ def changed_files(old,new):
 
 print('starting processing of commit')
 
+cf = changed_files(old,new)
+
+# do a dry run to catch errors
+for f in cf:
+    if f[0] == 'M' or f[0] == 'A' or f[0] == 'C':
+        r = processFile(f[0],'/dev/null')
+
+# do a real run
 for c in changed_files(old,new):
    action = c[0]
    file = c[1]
@@ -32,7 +48,7 @@ for c in changed_files(old,new):
          pass
    elif action == 'M' or action == 'A' or action == 'C':
       print('C {}'.format(file))
-      #process( file, TARGET + file + '.xml')
+      process( file, TARGET + file + '.xml')
    else:
       print('unknown git status {} of <{}>'.format(action,file), file=sys.stderr)
 #updateList()
