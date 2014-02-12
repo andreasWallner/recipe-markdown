@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="root">
+        <xs:complexType>
+           <xs:sequence>
+               <xs:element name="recipe" type="recipe" maxOccurs="unbounded" minOccurs="1"/>
+           </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="recipe">
+        <xs:sequence>
+            <xs:element name="meta" type="meta" minOccurs="1" maxOccurs="1" />
+            <xs:element name="instructions" type="instructions" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="meta">
+        <xs:all>
+            <xs:element name="title" type="xs:string" />
+            <xs:element name="size" type="xs:string" minOccurs="0"/>
+            <xs:element name="source" type="xs:string" minOccurs="0"/>
+            <xs:element name="author" type="xs:string" minOccurs="0"/>
+        </xs:all>
+    </xs:complexType>
+    
+    <xs:complexType name="instructions">
+        <xs:all>
+            <xs:element name="phase" type="phase" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="comment" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+        </xs:all>
+    </xs:complexType>
+    
+    <xs:complexType name="phase">
+        <xs:sequence>
+            <xs:element name="ingredient" type="ingredient" maxOccurs="unbounded" minOccurs="0" />
+            <xs:element name="step" type="xs:string" maxOccurs="unbounded" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="ingredient">
+        <xs:all>
+            <xs:element name="name" type="xs:string" />
+            <xs:element name="amount" type="xs:string" minOccurs="0" />
+            <xs:element name="unit" type="xs:string" minOccurs="0" />
+        </xs:all>
+    </xs:complexType>
+</xs:schema>
+
