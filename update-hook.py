@@ -37,5 +37,7 @@ for c in changed_files(old,new):
       print('unknown git status {} of <{}>'.format(action,file), file=sys.stderr)
 #updateList()
 
+print('finished processing of commit')
+
 exit(1)
 
