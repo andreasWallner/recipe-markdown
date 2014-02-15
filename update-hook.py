@@ -4,6 +4,7 @@ import os
 import io
 import sys
 import git
+import index
 from lxml import etree
 
 from parser import parseFile
@@ -15,18 +16,20 @@ XSLT='recipe2html.xslt'
 def process( obj_id, target):
     stream = io.TextIOWrapper( git.blob_file_handle(obj_id), encoding='utf8')
     r = parseFile(stream)
-    et = serializeRecipes(r)
-    et.addprevious(etree.ProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' + XSLT + '"'))
-    e = etree.ElementTree(serializeRecipes(r))
-    e.write(target,xml_declaration=True,pretty_print=True,encoding='UTF-8')
+    rec = serializeRecipes(r)
+    rec.addprevious(etree.ProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' + XSLT + '"'))
+    et = etree.ElementTree(rec)
+    et.write(target,xml_declaration=True,pretty_print=True,encoding='UTF-8')
 
-def update_index():
-    # very ugly index
-    root = etree.Element('html')
-    body = etree.SubElement(root,'body')
-    
-    for f in os.listdir(TARGET):
-        print(f)
+def cleanup_filename(name):
+    parts = name.split('.')
+    if parts[-1] == 'rmd':
+        return '.'.join(parts[:-1])
+    else:
+        return name
+
+def xml_filename(name):
+    return TARGET + cleanup_filename(name) + '.xml'
 
 (ref,old,new) = sys.argv[1:4]
 
@@ -40,28 +43,28 @@ for f in cf:
     file = ' '.join(f[5:])
     obj_id = f[3]
     if action == 'M' or action == 'A' or action == 'C':
-        r = process(git.blob_file_handle(obj_id),'/dev/null')
+        r = process(obj_id,'/dev/null')
 
 # do a real run
 for c in cf:
-   action = c[4]
-   file = ' '.join(c[5:])
-   obj_id = c[3]
-   if action == 'D':
-      print('D {}'.format(file))
-      try:
-         os.remove(TARGET + c[1] + '.xml')
-      except FileNotFoundError:
-         pass
+    action = c[4]
+    file = ' '.join(c[5:])
+    obj_id = c[3]
+    if action == 'D':
+        print('D {}'.format(file))
+        try:
+            os.remove(xml_filename(file))
+        except FileNotFoundError:
+            print('file to be removed, but could not be found'.format(file))
 
-   elif action == 'M' or action == 'A' or action == 'C':
-      print('C {}'.format(file))
-      process( git.blob_file_handle(obj_id), TARGET + file + '.xml')
+    elif action == 'M' or action == 'A' or action == 'C':
+        print('C {}'.format(file))
+        process(obj_id, xml_filename(file))
 
-   else:
-      print('unknown git status {} of <{}>'.format(action,file), file=sys.stderr)
+    else:
+        print('unknown git status {} of <{}>'.format(action,file), file=sys.stderr)
 
-update_index()
+index.update_index(TARGET)
 
 print('finished processing of commits')
 
