@@ -16,9 +16,7 @@ def parseIngredient(line):
     result = re.match( r, line)
 
     if result is not None:
-        i = Ingredient( result.groups()[2], result.groups()[0], result.groups()[1])
-        print(i)
-        return i
+        return Ingredient( result.groups()[2], result.groups()[0], result.groups()[1])
 
     return Ingredient( line.lstrip('# \t'), None, None)
 
