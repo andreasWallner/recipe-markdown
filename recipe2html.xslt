@@ -17,7 +17,7 @@
                     }
                     
                     div.container {
-                    max-width:600px;
+                    max-width:800px;
                     width:100%;
                     margin: 0px auto 0px auto;
                     }
@@ -61,7 +61,11 @@
                     padding-right:10px;
                     vertical-align:top;
                     }
-                    
+
+                    td.amount, td.ingredient {
+                    white-space:nowrap;
+                    }
+
                     th:last-child, td:last-child {
                     width:100%;
                     }
@@ -77,8 +81,8 @@
                     border-radius: 50%;
                     behavior: url(PIE.htc); /* remove if you don't care about IE8 */
                     
-                    width: 1em;
-                    height: 1em;
+                    width: 1.2em;
+                    height: 1.2em;
                     padding: 1px;
                     
                     background: #fff;
@@ -88,10 +92,10 @@
                     vertical-align:middle;
                     
                     font: 0.7em Arial, sans-serif;
-                    line-height:1em;
+                    line-height:1.2em;
                     display:inline-block;
-                    margin-right:0.3em;
-                    margin-bottom:0.15em;
+                    margin-right:0.4em;
+                    margin-bottom:0.2em;
                     }
                 </style>
             </head>
@@ -133,9 +137,9 @@
     
     <xsl:template match="phase">
         <tr>
-            <td><xsl:for-each select="ingredient"><xsl:value-of select="name/text()" /><br /></xsl:for-each></td>
-            <td><xsl:for-each select="ingredient"><xsl:value-of select="amount/text()" /> <xsl:value-of select="unit/text()" /><br /></xsl:for-each></td>
-            <td><xsl:for-each select="step">
+            <td class="ingredient"><xsl:for-each select="ingredient"><xsl:value-of select="name/text()" /><br /></xsl:for-each></td>
+            <td class="amount"><xsl:for-each select="ingredient"><xsl:value-of select="amount/text()" /><xsl:text> </xsl:text><xsl:value-of select="unit/text()" /><br /></xsl:for-each></td>
+            <td class="step"><xsl:for-each select="step">
                 <div class="numberCircle">
                     <xsl:value-of select="count(preceding::step)+1" />
                 </div>
