@@ -64,7 +64,10 @@ class Phase(object):
             )
 
 class Recipe(object):
-    def __init__(self, title = None, size = None, source = None, author = None, phases = []):
+    def __init__(self, title = None, size = None, source = None, author = None, phases = None):
+        if phases == None:
+            phases = []
+
         self.title = title
         self.size = size
         self.source = source
