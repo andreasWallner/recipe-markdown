@@ -3,9 +3,8 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="xs"
     version="1.0">
-    <xsl:output method="xml" doctype-system="legacy-compat" encoding="utf-8" indent="yes" />
+    <xsl:output method="html" doctype-system="legacy-compat" encoding="utf-8" indent="yes" />
     <xsl:template match="/">
-        <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE HTML&gt;</xsl:text>
         <html>
             <head>
                 <title><xsl:value-of select="//meta/title/text()" /></title>
