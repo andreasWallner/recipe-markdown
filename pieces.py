@@ -2,7 +2,7 @@ from errors import *
 from lxml import etree
 
 class Ingredient(object):
-    def __init__( self, name, amount, unit):
+    def __init__(self, name, amount, unit):
         self.name = name
         self.amount = amount
         self.unit = unit
@@ -10,7 +10,7 @@ class Ingredient(object):
         if amount is None and unit is not None or amount is not None and unit is None:
             raise RecipeParseError('ingredient with amount must have amount and unit')
 
-    def serialize(self,element):
+    def serialize(self, element):
         i = etree.SubElement( element, 'ingredient')
         etree.SubElement( i, 'name').text = self.name
         if self.amount is not None:
@@ -18,30 +18,30 @@ class Ingredient(object):
             etree.SubElement( i, 'unit').text = self.unit
 
     def __repr__(self):
-        return 'Ingredient( {}, {}, {})'.format(self.name, self.amount, self.unit)
+        return 'Ingredient({!r}, {!r}, {!r})'.format(self.name, self.amount, self.unit)
 
 class Step(object):
-    def __init__( self, text):
+    def __init__(self, text):
         self.text = text
 
     def serialize(self, element):
-        e = etree.SubElement( element, 'step').text = self.text
+        e = etree.SubElement(element, 'step').text = self.text
 
     def __repr__(self):
-        return 'Step({})'.format(self.text)
+        return 'Step({!r})'.format(self.text)
 
 class Hint(object):
-    def __init__( self, text):
+    def __init__(self, text):
         self.text = text
 
     def serialize(self, element):
-        etree.SubElement( element, 'hint').text = self.text
+        etree.SubElement(element, 'hint').text = self.text
 
     def __repr__(self):
-        return 'Step({})'.format(self.text)
+        return 'Hint({!r})'.format(self.text)
 
 class Phase(object):
-    def __init__( self, ingredients = None, steps = None):
+    def __init__(self, ingredients = None, steps = None):
         if ingredients is None:
             ingredients = []
         if steps is None:
@@ -51,17 +51,14 @@ class Phase(object):
         self.steps = steps
 
     def serialize(self, element):
-        p = etree.SubElement( element, 'phase')
+        p = etree.SubElement(element, 'phase')
         for x in self.ingredients:
             x.serialize(p)
         for x in self.steps:
             x.serialize(p)
 
     def __repr__(self):
-        return 'Phase({},{})'.format(
-            str(self.ingredients),
-            str(self.steps),
-            )
+        return 'Phase({!r},{!r})'.format(self.ingredients, self.steps)
 
 class Recipe(object):
     def __init__(self, title = None, size = None, source = None, author = None, phases = None):
@@ -75,22 +72,22 @@ class Recipe(object):
         self.phases = phases
 
     def serialize(self, element):
-        r = etree.SubElement( element, 'recipe')
-        m = etree.SubElement( r, 'meta')
-        i = etree.SubElement( r, 'instructions')
+        r = etree.SubElement(element, 'recipe')
+        m = etree.SubElement(r, 'meta')
+        i = etree.SubElement(r, 'instructions')
 
         if self.title is not None:
-            etree.SubElement( m, 'title').text = self.title
+            etree.SubElement(m, 'title').text = self.title
         if self.size is not None:
-            etree.SubElement( m, 'size').text = self.size
+            etree.SubElement(m, 'size').text = self.size
         if self.source is not None:
-            etree.SubElement( m, 'source').text = self.source
+            etree.SubElement(m, 'source').text = self.source
         if self.author is not None:
-            etree.SubElement( m, 'author').text = self.author
+            etree.SubElement(m, 'author').text = self.author
 
         for p in self.phases:
             p.serialize(i)
 
     def __repr__(self):
-        return 'Recipe({},{},{},{},{})'.format(
-            self.title, self.size, self.source, self.author, str(self.phases))
+        return 'Recipe({!r}, {!r}, {!r}, {!r}, {!r})'.format(
+            self.title, self.size, self.source, self.author, self.phases)
