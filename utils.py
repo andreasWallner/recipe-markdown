@@ -24,8 +24,7 @@ class XmlTestMixin(object):
         slightly intelligent matching of the tested string to the reference
         string.
 
-        '...' can be used as a wildcard and any point in the reference
-        string.
+        '...' can be used as a wildcard instead of nodes or attribute values.
 
         Wildcard Examples:
             <foo>...</foo>
