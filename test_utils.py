@@ -30,3 +30,16 @@ class XmlTestMixinTest(unittest.TestCase, XmlTestMixin):
         with self.assertRaises(AssertionError) as context:
             self.m.assertXmlEqual('<r />', '<b />')
         self.assertEqual(context.exception.args[0], 'Expected:\n  <b></b>\n\nGot:\n  <r></r>\n\nDiff:\n  <b (got: r)></b (got: r)>\n')
+
+class extensionTest(unittest.TestCase):
+    def test_normal(self):
+        x = extension('foo.rmd')
+        self.assertEqual(x, 'rmd')
+
+    def test_noext(self):
+        x = extension('foo')
+        self.assertIsNone(x)
+
+    def test_multiple(self):
+        x = extension('foo.rmd.xml')
+        self.assertEqual(x, 'xml')

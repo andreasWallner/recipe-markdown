@@ -55,6 +55,22 @@ class RealEqualMixin(object):
         self.assertFalse( a == b, '{!r} == {!r}'.format(a, b))
         self.assertFalse( b == a, '{!r} == {!r}'.format(b, a))
 
+def extension(filename):
+    """ returns the extension when given a filename
+
+    will return None if there is no extension
+
+    >>> extension('foo.bar')
+    'bar'
+    >>> extension('foo')
+    None
+    """
+    s = filename.split('.')
+    if len(s) > 1:
+        return s[-1]
+    else:
+        return None
+
 def Trace(f):
     @wraps(f)
     def dec_f(*args, **kwargs):
