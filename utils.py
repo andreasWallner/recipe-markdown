@@ -42,6 +42,19 @@ class XmlTestMixin(object):
             message = checker.output_difference(Example("", want), got, 0)
             raise AssertionError(message)
 
+class RealEqualMixin(object):
+    def assertRealEqual(self, a, b, msg=None):
+        self.assertTrue( a == b, '{!r} == {!r}'.format(a, b))
+        self.assertTrue( b == a, '{!r} == {!r}'.format(b, a))
+        self.assertFalse( a != b, '{!r} != {!r}'.format(a, b))
+        self.assertFalse( b != a, '{!r} != {!r}'.format(b, a))
+
+    def assertRealNotEqual(self, a, b, msg=None):
+        self.assertTrue( a != b, '{!r} != {!r}'.format(a, b))
+        self.assertTrue( b != a, '{!r} != {!r}'.format(b, a))
+        self.assertFalse( a == b, '{!r} == {!r}'.format(a, b))
+        self.assertFalse( b == a, '{!r} == {!r}'.format(b, a))
+
 def Trace(f):
     @wraps(f)
     def dec_f(*args, **kwargs):

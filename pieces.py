@@ -20,6 +20,17 @@ class Ingredient(object):
     def __repr__(self):
         return 'Ingredient({!r}, {!r}, {!r})'.format(self.name, self.amount, self.unit)
 
+    def __eq__(self, other):
+        if not isinstance(other, Ingredient):
+            return NotImplemented
+
+        return (self.name == other.name
+            and self.amount == other.amount
+            and self.unit == other.unit)
+
+    def __ne__(self, other):
+        return not self == other
+
 class Step(object):
     def __init__(self, text):
         self.text = text
@@ -30,6 +41,16 @@ class Step(object):
     def __repr__(self):
         return 'Step({!r})'.format(self.text)
 
+    def __eq__(self, other):
+        if not isinstance(other, Step):
+            return NotImplemented
+        return self.text == other.text
+
+    def __ne__(self, other):
+        if not isinstance(other, Step):
+            return NotImplemented
+        return self.text != other.text
+
 class Hint(object):
     def __init__(self, text):
         self.text = text
@@ -39,6 +60,16 @@ class Hint(object):
 
     def __repr__(self):
         return 'Hint({!r})'.format(self.text)
+
+    def __eq__(self, other):
+        if not isinstance(other, Hint):
+            return NotImplemented
+        return self.text == other.text
+
+    def __ne__(self, other):
+        if not isinstance(other, Hint):
+            return NotImplemented
+        return self.text != other.text
 
 class Phase(object):
     def __init__(self, ingredients = None, steps = None):
@@ -59,6 +90,16 @@ class Phase(object):
 
     def __repr__(self):
         return 'Phase({!r},{!r})'.format(self.ingredients, self.steps)
+
+    def __eq__(self, other):
+        if not isinstance(other, Phase):
+            return NotImplemented
+
+        return (self.ingredients == other.ingredients
+            and self.steps == other.steps)
+
+    def __ne__(self, other):
+        return not self == other
 
 class Recipe(object):
     def __init__(self, title = None, size = None, source = None, author = None, phases = None):
@@ -91,3 +132,16 @@ class Recipe(object):
     def __repr__(self):
         return 'Recipe({!r}, {!r}, {!r}, {!r}, {!r})'.format(
             self.title, self.size, self.source, self.author, self.phases)
+
+    def __eq__(self, other):
+        if not isinstance(other, Recipe):
+            return NotImplemented
+
+        return (self.title == other.title
+            and self.size == other.size
+            and self.source == other.source
+            and self.author == other.author
+            and self.phases == other.phases)
+
+    def __ne__(self, other):
+        return not self == other

@@ -2,9 +2,9 @@ import unittest
 from errors import *
 from pieces import *
 from lxml import etree
-from utils import XmlTestMixin
+from utils import XmlTestMixin, RealEqualMixin
 
-class IngredientTest(unittest.TestCase, XmlTestMixin):
+class IngredientTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_init(self):
         i = Ingredient('name','amount','unit')
         self.assertEqual(i.name, 'name')
@@ -39,7 +39,15 @@ class IngredientTest(unittest.TestCase, XmlTestMixin):
         i = Ingredient('name',None,None)
         self.assertEqual(repr(i),"Ingredient('name', None, None)")
 
-class StepTest(unittest.TestCase, XmlTestMixin):
+    def test_compare(self):
+        self.assertRealEqual(Ingredient('n', None, None), Ingredient('n', None, None))
+        self.assertRealEqual(Ingredient('n', 'a', 'u'), Ingredient('n', 'a', 'u'))
+
+        self.assertRealNotEqual(Ingredient('n', None, None), Ingredient('m', None, None))
+        self.assertRealNotEqual(Ingredient('n', 'a', 'u'), Ingredient('n', 'b', 'u'))
+        self.assertRealNotEqual(Ingredient('n', 'a', 'u'), Ingredient('n', 'a', 'p'))
+
+class StepTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_init(self):
         s = Step('text')
         self.assertEqual(s.text, 'text')
@@ -55,7 +63,11 @@ class StepTest(unittest.TestCase, XmlTestMixin):
         s = Step('text')
         self.assertEqual(repr(s),"Step('text')")
 
-class HintTest(unittest.TestCase,XmlTestMixin):
+    def test_compare(self):
+        self.assertRealEqual(Step('foo'), Step('foo'))
+        self.assertRealNotEqual(Step('foo'), Step('bar'))
+
+class HintTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_init(self):
         h = Hint('text')
         self.assertEqual(h.text, 'text')
@@ -71,7 +83,11 @@ class HintTest(unittest.TestCase,XmlTestMixin):
         h = Hint('text')
         self.assertEqual(repr(h),"Hint('text')")
 
-class PhaseTest(unittest.TestCase,XmlTestMixin):
+    def test_compare(self):
+        self.assertRealEqual(Hint('foo'), Hint('foo'))
+        self.assertRealNotEqual(Hint('foo'), Hint('bar'))
+
+class PhaseTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_init(self):
         p = Phase()
         self.assertEqual(p.ingredients,[])
@@ -93,7 +109,23 @@ class PhaseTest(unittest.TestCase,XmlTestMixin):
 
         self.assertXmlEqual(etree.tounicode(e), serialization['phase'])
 
-class RecipeTest(unittest.TestCase,XmlTestMixin):
+    def test_compare(self):
+        i1 = Ingredient('name',None,None)
+        i2 = Ingredient('foo',None,None)
+        s1 = Step('step1')
+        s2 = Step('step2')
+        
+        self.assertRealEqual(Phase(), Phase())
+        self.assertRealEqual(Phase([i1,i2]), Phase([i1,i2]))
+        self.assertRealEqual(Phase(None, [s1,s2]), Phase(None, [s1,s2]))
+        self.assertRealEqual(Phase([i1,i2],[s1,s2]), Phase([i1,i2],[s1,s2]))
+
+        self.assertRealNotEqual(Phase([i1]), Phase())
+        self.assertRealNotEqual(Phase(None, [s1]), Phase())
+        self.assertRealNotEqual(Phase([i1]), Phase([i2]))
+        self.assertRealNotEqual(Phase(None, [s1]), Phase(None, [s2]))
+        
+class RecipeTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_init(self):
         r = Recipe('title', 'size', 'source', 'author')
         self.assertEqual(r.title, 'title')
@@ -121,7 +153,16 @@ class RecipeTest(unittest.TestCase,XmlTestMixin):
     def test_repr(self):
         r = Recipe('title', 'size', 'source', 'author')
         self.assertEqual(repr(r), "Recipe('title', 'size', 'source', 'author', [])")
+
+    def test_compare(self):
+        i = Ingredient('foo', None, None)
+        self.assertRealEqual(Recipe(), Recipe())
+        self.assertRealEqual(Recipe('a', 'b', 'c', 'd', [Phase()]), Recipe('a', 'b', 'c', 'd', [Phase()]))
         
+        self.assertRealNotEqual(Recipe('a'), Recipe('b'))
+        self.assertRealNotEqual(Recipe(None, 'a'), Recipe(None, 'b'))
+        self.assertRealNotEqual(Recipe(None, None, 'a'), Recipe(None, None, 'b'))
+        self.assertRealNotEqual(Recipe(None, None, None, [Phase()]), Recipe(None, None, None, [Phase([i])]))
 
 if __name__ == '__main__':
     unittest.main()
