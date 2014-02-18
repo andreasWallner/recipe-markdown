@@ -1,4 +1,6 @@
 import unittest
+import warnings
+import os
 from utils import *
 
 class XmlTestMixinTest(unittest.TestCase, XmlTestMixin):
@@ -28,7 +30,7 @@ class XmlTestMixinTest(unittest.TestCase, XmlTestMixin):
 
     def test_message(self):
         with self.assertRaises(AssertionError) as context:
-            self.m.assertXmlEqual('<r />', '<b />')
+            self.assertXmlEqual('<r />', '<b />')
         self.assertEqual(context.exception.args[0], 'Expected:\n  <b></b>\n\nGot:\n  <r></r>\n\nDiff:\n  <b (got: r)></b (got: r)>\n')
 
 class extensionTest(unittest.TestCase):
@@ -43,3 +45,33 @@ class extensionTest(unittest.TestCase):
     def test_multiple(self):
         x = extension('foo.rmd.xml')
         self.assertEqual(x, 'xml')
+
+class ChangeDirTest(unittest.TestCase):
+    def setUp(self):
+        # TODO make test work on windows too
+        self.testdir = '/tmp'
+
+    def test_normal(self):
+        old = os.getcwd()
+        with ChangeDir(self.testdir):
+            self.assertEqual(os.getcwd(), self.testdir)
+        self.assertEqual(os.getcwd(), old)
+
+    def test_manual(self):
+        old = os.getcwd()
+        c = ChangeDir(self.testdir)
+        self.assertEqual(os.getcwd(), self.testdir)
+
+        c.cleanup()
+        self.assertEqual(os.getcwd(), old)
+
+    def test_warning(self):
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+
+            c = ChangeDir(self.testdir)
+            del c
+            
+            self.assertEqual(len(w), 1)
+            self.assertTrue(issubclass(w[-1].category, ResourceWarning))
+            self.assertIn('Implicit cleanup of <utils.ChangeDir object at', str(w[-1].message))

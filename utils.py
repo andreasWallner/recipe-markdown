@@ -1,3 +1,5 @@
+import warnings
+import os
 from doctest import Example
 from lxml.doctestcompare import LXMLOutputChecker
 
@@ -43,17 +45,26 @@ class XmlTestMixin(object):
             raise AssertionError(message)
 
 class RealEqualMixin(object):
+    """ methods to check comparison operators """
     def assertRealEqual(self, a, b, msg=None):
+        """ checks the == and != operators, also check symmetry """
         self.assertTrue( a == b, '{!r} == {!r}'.format(a, b))
         self.assertTrue( b == a, '{!r} == {!r}'.format(b, a))
         self.assertFalse( a != b, '{!r} != {!r}'.format(a, b))
         self.assertFalse( b != a, '{!r} != {!r}'.format(b, a))
 
     def assertRealNotEqual(self, a, b, msg=None):
+        """ checks the == and != operators, also check symmetry """
         self.assertTrue( a != b, '{!r} != {!r}'.format(a, b))
         self.assertTrue( b != a, '{!r} != {!r}'.format(b, a))
         self.assertFalse( a == b, '{!r} == {!r}'.format(a, b))
         self.assertFalse( b == a, '{!r} == {!r}'.format(b, a))
+
+class TypeCheckMixin(object):
+    def assertType(self, obj, t):
+        """ fail if obj is not of type t """
+        if not isinstance(obj, t):
+            raise AssertionError('{!r} is not of type {}'.format(obj, t))
 
 def extension(filename):
     """ returns the extension when given a filename
@@ -82,3 +93,37 @@ def Trace(f):
         print('exiting ' +  f.__name__)
         return result
     return dec_f
+
+class ChangeDir(object):
+    """ changes the current working directoy
+    best used with a context manager:
+
+        with ChangeDir('/some/where'):
+            ....
+
+    after exiting the context, the current working
+    directory is restored to its prior state.
+
+    One can also call cleanup() to restore the
+    working directory manually
+    """
+    def __init__(self, path):
+        self._oldPath = os.getcwd()
+        os.chdir(path)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exit, value, exc):
+        self.cleanup()
+
+    def __del__(self):
+        self.cleanup(_warn = True)
+
+    def cleanup(self, _warn = False):
+        """ call to cleanup manually """
+        if self._oldPath is not None:
+            os.chdir(self._oldPath)
+            self._oldPath = None
+            if _warn:
+                warnings.warn('Implicit cleanup of {!r}'.format(self), ResourceWarning, stacklevel=2)
