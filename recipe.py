@@ -7,9 +7,6 @@ from lxml import etree
 from parser import parseFile
 from serializer import serializeRecipes
 
-#from IPython.core import ultratb
-#sys.excepthook = ultratb.FormattedTB(mode='Verbose', color_scheme='Linux', call_pdb=1)
-
 def main():
     parser = argparse.ArgumentParser(description='Work with recipe markdown files')
     parser.add_argument('-i', metavar='mdfile', type=argparse.FileType('r'), help='name of the markdown file to process', default=sys.stdin)
