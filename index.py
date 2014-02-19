@@ -20,12 +20,14 @@ def append_recipes(body, path, f):
     for r in recipes:
         title = r.xpath('//title')[0].text
 
-        a = etree.SubElement(body,'a')
+        a = etree.SubElement(body, 'a')
         a.attrib['href'] = f
         a.text = title
+        etree.SubElement(body, 'br')
 
 def update_index(path):
     """ write index.html in/for path """
+    
     root = etree.Element('html')
     body = etree.SubElement(root, 'body')
     
@@ -33,5 +35,6 @@ def update_index(path):
         if utils.extension(f) == 'xml':
             append_recipes(body, path, f)
 
-    tree = etree.ElementTree(root)
-    tree.write(path+'index.html',pretty_print=True,encoding='UTF-8')
+    with open(path + 'index.html', 'wb') as f:
+        f.write(b'<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE HTML>')
+        etree.ElementTree(root).write(f, encoding='utf-8')
