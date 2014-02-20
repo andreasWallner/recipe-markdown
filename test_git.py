@@ -24,9 +24,6 @@ def _write_file(filename, content):
     with open(filename, 'w') as f:
         f.write(content)
 
-def _delete_file(filename):
-    os.unlink(filename)
-
 class tests(unittest.TestCase, utils.TypeCheckMixin):
     def _setup_git(self):
         _run_command(['git', 'init'])
@@ -34,6 +31,8 @@ class tests(unittest.TestCase, utils.TypeCheckMixin):
         _write_file('delete', 'bar')
         _run_command(['git', 'add', '.'])
         _run_command(['git', 'commit', '-m first'])
+
+    def _second_commit(self):
         _write_file('new', 'bar')
         _write_file('change', 'foo')
         _run_command(['git', 'rm', 'delete'])
@@ -44,8 +43,12 @@ class tests(unittest.TestCase, utils.TypeCheckMixin):
         with tempfile.TemporaryDirectory() as tmp:
             with utils.ChangeDir(tmp):
                 self._setup_git()
+                changes = git.changed_files('0000000000000000000000000000000000000000', 'HEAD')
+                self.assertEqual(changes, result['first'])
+
+                self._second_commit()
                 changes = git.changed_files('HEAD^', 'HEAD')
-                self.assertEqual(changes, result['default'])
+                self.assertEqual(changes, result['second'])
 
     def test_blob_file_handle(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -57,9 +60,14 @@ class tests(unittest.TestCase, utils.TypeCheckMixin):
                     self.assertEqual(content, [b'bar'])
 
 result = {
-    'default' : [
+    'first' : [
+        [':000000', '100644', '0000000000000000000000000000000000000000', 'ba0e162e1c47469e3fe4b393a8bf8c569f302116', 'A', 'change'],
+        [':000000', '100644', '0000000000000000000000000000000000000000', 'ba0e162e1c47469e3fe4b393a8bf8c569f302116', 'A', 'delete'],
+        ],
+    'second' : [
         [':100644', '100644', 'ba0e162e1c47469e3fe4b393a8bf8c569f302116', '19102815663d23f8b75a47e7a01965dcdc96468c', 'M', 'change'],
         [':100644', '000000', 'ba0e162e1c47469e3fe4b393a8bf8c569f302116', '0000000000000000000000000000000000000000', 'D', 'delete'],
         [':000000', '100644', '0000000000000000000000000000000000000000', 'ba0e162e1c47469e3fe4b393a8bf8c569f302116', 'A', 'new'],
         ],
     }
+

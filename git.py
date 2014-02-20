@@ -3,9 +3,15 @@ import io
 import subprocess
 
 def changed_files(old,new):
+    # if old is before the first commit, it will be all zeros, which is invalid
+    # therefore just make it blank
+    git_call = ['git', 'diff-tree', '--full-index', '--root', '--no-commit-id', old, new]
+    if len(old.strip('0')) == 0: 
+        del git_call[-2]
+
     environ = os.environ.copy()
     proc = subprocess.Popen(
-        ['git', 'diff-tree', '--full-index', old, new],
+        git_call,
         stdout=subprocess.PIPE,
         env=environ,
         )
