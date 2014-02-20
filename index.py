@@ -1,5 +1,6 @@
 import os
 import utils
+import html
 from lxml import etree
 
 def append_recipes(body, path, f):
@@ -21,14 +22,20 @@ def append_recipes(body, path, f):
         title = r.xpath('//title')[0].text
 
         a = etree.SubElement(body, 'a')
-        a.attrib['href'] = f
-        a.text = title
+        a.attrib['href'] = html.escape(f).replace(' ', '%20')
+        a.text = html.escape(title)
         etree.SubElement(body, 'br')
 
 def update_index(path):
     """ write index.html in/for path """
     
     root = etree.Element('html')
+    head = etree.SubElement(root, 'head')
+    title = etree.SubElement(head, 'title')
+    title.text = 'Recipes'
+    meta = etree.SubElement(head, 'meta')
+    meta.attrib['http-equiv'] = "Content-Type"
+    meta.attrib['content'] = "text/html;charset=utf-8"
     body = etree.SubElement(root, 'body')
     
     for f in os.listdir(path):
@@ -36,5 +43,5 @@ def update_index(path):
             append_recipes(body, path, f)
 
     with open(path + 'index.html', 'wb') as f:
-        f.write(b'<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE HTML>')
+        f.write(b'<!DOCTYPE HTML>')
         etree.ElementTree(root).write(f, encoding='utf-8')
