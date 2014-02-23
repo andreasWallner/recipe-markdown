@@ -13,7 +13,7 @@ class State:
     class FinishRecipe: pass
 
 def parseIngredient(line):
-    r = r'^\s*#\s*([0-9/]+(?:\s[0-9/]+)*)\s*([a-zA-Z]+)\s+(.*)'
+    r = r'^\s*#\s*([0-9/\.]+(?:\s[0-9/]+)*)\s*([a-zA-Z]+)\s+(.*)'
     result = re.match( r, line)
 
     if result is None:

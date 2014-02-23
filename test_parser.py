@@ -11,6 +11,18 @@ class parseIngredientTest(unittest.TestCase):
         i = parseIngredient('#25g butter')
         self.assertEqual(i, Ingredient('butter', '25', 'g'))
 
+    def test_fraction(self):
+        i = parseIngredient('#1/2g butter')
+        self.assertEqual(i, Ingredient('butter', '1/2', 'g'))
+
+    def test_mixed(self):
+        i = parseIngredient('# 1 1/2g butter')
+        self.assertEqual(i, Ingredient('butter', '1 1/2', 'g'))
+
+    def test_real(self):
+        i = parseIngredient('# 0.5 g butter')
+        self.assertEqual(i, Ingredient('butter', '0.5', 'g'))
+
     def test_noamount(self):
         i = parseIngredient('\t #diced onion   \n')
         self.assertEqual(i, Ingredient('diced onion', None, None))
