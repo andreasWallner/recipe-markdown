@@ -142,8 +142,8 @@ def parseFile(stream):
                         state = State.FinishRecipe
                     elif start == '#':
                         state = State.Ingredients
-                    elif start == '+':
-                        state = State.WaitPhase
+                    elif start == '*':
+                        state = State.Steps
                     continue
                 elif start == '+':
                     parseWaitPhase(line, waitphase)

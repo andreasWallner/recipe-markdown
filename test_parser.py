@@ -99,7 +99,9 @@ test_input = {
         * eat butter
         + lie down a bit
         # 100g meat
-        * eat meat""",
+        * eat meat
+        + never try this
+        * this""",
     'multi_recipe' : """
         ! title: rec 1
         # something
@@ -151,8 +153,15 @@ test_result = {
                     [
                         Step('eat meat')
                         ]
-                    )
-                ]
+                    ),
+                WaitPhase('never try this'),
+                Phase(
+                    None,
+                    [
+                        Step('this'),
+                        ]
+                    ),
+                ],
             )
         ],
     'multi_recipe' : [
