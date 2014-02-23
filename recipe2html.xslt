@@ -66,6 +66,11 @@
                     white-space:nowrap;
                     }
 
+                    td.waitphase {
+                    text-align:center;
+                    background-color:#EEE;
+                    }
+
                     th:last-child, td:last-child {
                     width:100%;
                     }
@@ -149,7 +154,7 @@
         </tr>
     </xsl:template>
 
-    <xsl:template match"waitphase">
-        <tr><td colspan="3"><xsl:value-of select="text()" /></td></tr>
+    <xsl:template match="waitphase">
+        <tr><td colspan="3" class="waitphase"><xsl:value-of select="text()" /></td></tr>
     </xsl:template>
 </xsl:stylesheet>
