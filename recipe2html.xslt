@@ -148,4 +148,8 @@
             </xsl:for-each></td>
         </tr>
     </xsl:template>
+
+    <xsl:template match"waitphase">
+        <tr><td colspan="3"><xsl:value-of select="text()" /></td></tr>
+    </xsl:template>
 </xsl:stylesheet>

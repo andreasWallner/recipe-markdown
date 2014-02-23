@@ -78,25 +78,25 @@ class StepTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
         self.assertRealEqual(Step('foo'), Step('foo'))
         self.assertRealNotEqual(Step('foo'), Step('bar'))
 
-class HintTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
+class WaitPhaseTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_init(self):
-        h = Hint('text')
+        h = WaitPhase('text')
         self.assertEqual(h.text, 'text')
 
     def test_serialize(self):
-        h = Hint('text')
+        h = WaitPhase('text')
         e = etree.Element('root')
         h.serialize(e)
 
-        self.assertXmlEqual(etree.tounicode(e), serialization['hint'])
+        self.assertXmlEqual(etree.tounicode(e), serialization['waitphase'])
 
     def test_repr(self):
-        h = Hint('text')
-        self.assertEqual(repr(h),"Hint('text')")
+        h = WaitPhase('text')
+        self.assertEqual(repr(h),"WaitPhase('text')")
 
     def test_compare(self):
-        self.assertRealEqual(Hint('foo'), Hint('foo'))
-        self.assertRealNotEqual(Hint('foo'), Hint('bar'))
+        self.assertRealEqual(WaitPhase('foo'), WaitPhase('foo'))
+        self.assertRealNotEqual(WaitPhase('foo'), WaitPhase('bar'))
 
 class PhaseTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_init(self):
@@ -185,7 +185,7 @@ serialization = {
         'noamount' : '<root><ingredient><name>name</name></ingredient></root>',
     },
     'step' : '<root><step>text</step></root>',
-    'hint' : '<root><hint>text</hint></root>',
+    'waitphase' : '<root><waitphase>text</waitphase></root>',
     'phase': '<root><phase><ingredient>...</ingredient><step>step1</step><step>step2</step></phase></root>',
     'recipe': """<root>
                    <recipe>

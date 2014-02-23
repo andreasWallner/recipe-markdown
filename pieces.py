@@ -52,23 +52,23 @@ class Step(object):
             return NotImplemented
         return self.text != other.text
 
-class Hint(object):
-    def __init__(self, text):
+class WaitPhase(object):
+    def __init__(self, text = None):
         self.text = text
 
     def serialize(self, element):
-        etree.SubElement(element, 'hint').text = self.text
+        etree.SubElement(element, 'waitphase').text = self.text
 
     def __repr__(self):
-        return 'Hint({!r})'.format(self.text)
+        return 'WaitPhase({!r})'.format(self.text)
 
     def __eq__(self, other):
-        if not isinstance(other, Hint):
+        if not isinstance(other, WaitPhase):
             return NotImplemented
         return self.text == other.text
 
     def __ne__(self, other):
-        if not isinstance(other, Hint):
+        if not isinstance(other, WaitPhase):
             return NotImplemented
         return self.text != other.text
 

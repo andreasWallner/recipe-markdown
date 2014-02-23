@@ -9,6 +9,7 @@ class State:
     class Meta: pass
     class Ingredients: pass
     class Steps: pass
+    class WaitPhase: pass
     class FinishPhase: pass
     class FinishRecipe: pass
 
@@ -28,7 +29,7 @@ def parseIngredient(line):
         )
 
 
-def parseMeta(line,recipe):
+def parseMeta(line, recipe):
     r = r'^\s*!\s*([a-zA-Z]+)\s*:\s*(.*)'
     result = re.match( r, line)
 
@@ -49,11 +50,20 @@ def parseMeta(line,recipe):
     else:
         raise Exception('invalid metadata key')
 
+def parseWaitPhase(line, waitphase):
+    line = line.lstrip(' \t+')
+    line = line.rstrip(' \t\n')
+    if waitphase.text is None:
+        waitphase.text = line
+    else:
+        waitphase.text = waitphase.text + ' ' + line
+
 def parseFile(stream):
     recipes = []
 
     phase = Phase()
     recipe = Recipe()
+    waitphase = WaitPhase()
 
     state = State.Waiting
 
@@ -81,6 +91,10 @@ def parseFile(stream):
                     state = State.Steps
                     continue
 
+                if start == '+':
+                    state = State.WaitPhase
+                    continue
+
             if state == State.Meta:
                 if not line:
                     state = State.FinishRecipe
@@ -90,24 +104,28 @@ def parseFile(stream):
                     state = State.Ingredients
                     continue
 
+                if start == '+':
+                    state = State.WaitPhase
+                    continue
+
                 if start == '!':
                     parseMeta( line, recipe)
 
 
             elif state == State.Ingredients:
-                if start == '!' or not line:
+                if start == '!' or start == '+' or not line:
                     state = State.FinishPhase
                     continue
 
                 if start == '*':
                     state = State.Steps
                     continue
-
+                
                 if start == '#':
                     phase.ingredients.append(parseIngredient(line))
 
             elif state == State.Steps:
-                if start == '!' or start == '#' or not line:
+                if start == '!' or start == '#' or start == '+' or not line:
                     state = State.FinishPhase
                     continue
 
@@ -115,6 +133,20 @@ def parseFile(stream):
                     line = line.lstrip('* \t')
                     line = line.rstrip(' \t\n')
                     phase.steps.append(Step(line))
+
+            elif state == State.WaitPhase:
+                if start == '!' or start == '#' or start == '*' or not line:
+                    recipe.phases.append(waitphase)
+                    waitphase = WaitPhase()
+                    if start == '!' or not line:
+                        state = State.FinishRecipe
+                    elif start == '#':
+                        state = State.Ingredients
+                    elif start == '+':
+                        state = State.WaitPhase
+                    continue
+                elif start == '+':
+                    parseWaitPhase(line, waitphase)
            
             elif state == State.FinishPhase:
                 recipe.phases.append(phase)
@@ -123,6 +155,8 @@ def parseFile(stream):
                     state = State.FinishRecipe
                 elif start == '#':
                     state = State.Ingredients
+                elif start == '+':
+                    state = State.WaitPhase
                 continue
 
             elif state == State.FinishRecipe:

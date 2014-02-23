@@ -97,6 +97,7 @@ test_input = {
     'multiphase' : """
         # 25g butter
         * eat butter
+        + lie down a bit
         # 100g meat
         * eat meat""",
     'multi_recipe' : """
@@ -142,6 +143,7 @@ test_result = {
                         Step('eat butter')
                         ]
                     ),
+                WaitPhase('lie down a bit'),
                 Phase(
                     [
                         Ingredient('meat', '100', 'g')

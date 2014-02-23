@@ -29,10 +29,13 @@ The markdown format contains three types of information:
 - metadata
 - ingredients
 - steps
+- wait phases
 
-The metadata block is located at the beginning of the recipe block, ingredients and steps are mixed because
-if the intended output format. Ingredients for a specific block come first, then the steps to perform with the
-mentioned ingredients.
+The metadata block is located at the beginning of the recipe block, ingredients
+and steps are mixed because if the intended output format. Ingredients for a
+specific block come first, then the steps to perform with the mentioned
+ingredients. Wait phases are steps in the recipe that primarily contain of
+waiting.
 
 Currently metadata may contain
 - title / name
@@ -51,6 +54,8 @@ salt). The unit has to follow the amount directly, without whitespace
 inbetween.
 
 Steps are started with a '\*', followed by the instruction.
+
+WaitPhase blocks start with a '+'.
 
 Example
 -------
