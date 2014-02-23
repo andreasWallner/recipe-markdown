@@ -4,7 +4,7 @@ from parser import *
 
 class parseIngredientTest(unittest.TestCase):
     def test_normal(self):
-        i = parseIngredient('\t # 25 g butter   \n')
+        i = parseIngredient('\t # 25g butter   \n')
         self.assertEqual(i, Ingredient('butter', '25', 'g'))
 
     def test_nospaces(self):
@@ -20,8 +20,12 @@ class parseIngredientTest(unittest.TestCase):
         self.assertEqual(i, Ingredient('butter', '1 1/2', 'g'))
 
     def test_real(self):
-        i = parseIngredient('# 0.5 g butter')
+        i = parseIngredient('# 0.5g butter')
         self.assertEqual(i, Ingredient('butter', '0.5', 'g'))
+
+    def test_nounit(self):
+        i = parseIngredient('# 4 eggs')
+        self.assertEqual(i, Ingredient('eggs', '4', None))
 
     def test_noamount(self):
         i = parseIngredient('\t #diced onion   \n')
@@ -88,12 +92,12 @@ class parseFileTest(unittest.TestCase):
 test_input = {
     'simple' : """
         ! title: the title
-        # 25 g butter
+        # 25g butter
         * eat butter   """,
     'multiphase' : """
-        # 25 g butter
+        # 25g butter
         * eat butter
-        # 100 g meat
+        # 100g meat
         * eat meat""",
     'multi_recipe' : """
         ! title: rec 1

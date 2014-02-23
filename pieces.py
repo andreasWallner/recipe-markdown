@@ -7,14 +7,15 @@ class Ingredient(object):
         self.amount = amount
         self.unit = unit
 
-        if amount is None and unit is not None or amount is not None and unit is None:
-            raise RecipeParseError('ingredient with amount must have amount and unit')
+        if amount is None and unit is not None:
+            raise RecipeParseError('ingredient with unit must have amount')
 
     def serialize(self, element):
         i = etree.SubElement( element, 'ingredient')
         etree.SubElement( i, 'name').text = self.name
         if self.amount is not None:
             etree.SubElement( i, 'amount').text = self.amount
+        if self.unit is not None:
             etree.SubElement( i, 'unit').text = self.unit
 
     def __repr__(self):

@@ -6,38 +6,49 @@ from utils import XmlTestMixin, RealEqualMixin
 
 class IngredientTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_init(self):
-        i = Ingredient('name','amount','unit')
+        i = Ingredient('name', 'amount', 'unit')
         self.assertEqual(i.name, 'name')
         self.assertEqual(i.amount, 'amount')
         self.assertEqual(i.unit, 'unit')
+    
+    def test_no_unit(self):
+        i = Ingredient('name', '5', None)
+        self.assertEqual(i.name, 'name')
+        self.assertEqual(i.amount, '5')
+        self.assertIsNone(i.unit)
 
     def test_init_fail(self):
-        with self.assertRaises(RecipeParseError) as context:
-            i = Ingredient('name','amount',None)
         with self.assertRaises(RecipeParseError) as context:
             i = Ingredient('name',None,'unit')
 
     def test_serialize(self):
-        i = Ingredient('name','amount','unit')
+        i = Ingredient('name', 'amount', 'unit')
         e = etree.Element('root')
         i.serialize(e)
 
-        self.assertXmlEqual(etree.tounicode(e),serialization['ingredient']['amount'])
+        self.assertXmlEqual(etree.tounicode(e), serialization['ingredient']['amount'])
+
+    def test_serialize_nounit(self):
+        i = Ingredient('name', 'amount', None)
+        e = etree.Element('root')
+        i.serialize(e)
+
+        self.assertXmlEqual(etree.tounicode(e), serialization['ingredient']['nounit'])
 
     def test_serialize_noamount(self):
-        i = Ingredient('name',None,None)
+        i = Ingredient('name', None, None)
         e = etree.Element('root')
         i.serialize(e)
 
-        self.assertXmlEqual(etree.tounicode(e),serialization['ingredient']['noamount'])
+        self.assertXmlEqual(etree.tounicode(e), serialization['ingredient']['noamount'])
 
     def test_repr(self):
-        i = Ingredient('name','amount','unit')
-        self.assertEqual(repr(i),"Ingredient('name', 'amount', 'unit')")
+        i = Ingredient('name', 'amount', 'unit')
+        self.assertEqual(repr(i), "Ingredient('name', 'amount', 'unit')")
 
     def test_repr_noamount(self):
-        i = Ingredient('name',None,None)
-        self.assertEqual(repr(i),"Ingredient('name', None, None)")
+        i = Ingredient('name', None, None)
+        self.assertEqual(repr(i), "Ingredient('name', None, None)")
 
     def test_compare(self):
         self.assertRealEqual(Ingredient('n', None, None), Ingredient('n', None, None))
@@ -170,6 +181,7 @@ if __name__ == '__main__':
 serialization = {
     'ingredient' : {
         'amount' : '<root><ingredient><name>name</name><amount>amount</amount><unit>unit</unit></ingredient></root>',
+        'nounit' : '<root><ingredient><name>name</name><amount>amount</amount></ingredient></root>',
         'noamount' : '<root><ingredient><name>name</name></ingredient></root>',
     },
     'step' : '<root><step>text</step></root>',

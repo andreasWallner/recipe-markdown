@@ -44,8 +44,11 @@ Metadata is written with a leading '!', followed by the type of metadata, a colo
 
 Then the recipe itself follows.
 
-Lines with ingredients are started with a '#'. After the hash, one can either write the amount, unit and ingredient
-name, or just the ingredient if an amount is not neccesary (e.g. salt).
+Lines with ingredients are started with a '#'. After the hash, one can either
+write the amount, unit and ingredient (e.g. 4tsp sugar) name, amount and name
+(e.g. 4 eggs), or just the ingredient if an amount is not neccesary (e.g.
+salt). The unit has to follow the amount directly, without whitespace
+inbetween.
 
 Steps are started with a '\*', followed by the instruction.
 
