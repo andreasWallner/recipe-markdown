@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html>
+<head><title>Recipes</title></head>
+<body>
+    {% for recipe in recipes %}
+        <a href="{{ recipe.filename }}">{{ recipe.title }}</a><br />
+    {% endfor %}
+</body>

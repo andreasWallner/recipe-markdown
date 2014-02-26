@@ -1,9 +1,38 @@
 import os
 import utils
-import html
 from lxml import etree
+try:
+    from jinja2 import Environment, FileSystemLoader
+    update_index = lambda p: update_index_jinja(p)
+except ImportError:
+    import html
+    update_index = lambda p: update_index_simple(p)
 
-def append_recipes(body, path, f):
+def _extract_data(path, f):
+    recipes = []
+    xml = etree.parse(path + f)
+    for r in xml.xpath('//recipe'):
+        meta = {'filename' : f}
+        for m in r.xpath('meta/*'):
+            meta[m.tag] = m.text
+
+        recipes.append(meta)
+    return recipes
+
+def update_index_jinja(path):
+    recs = []
+    for f in os.listdir(path):
+        if utils.extension(f) == 'xml':
+            for r in _extract_data(path, f):
+                recs.append(r)
+
+    env = Environment(loader = FileSystemLoader('.'))
+    template = env.get_template('index.jinja')
+
+    with open(path + 'index.html', 'w') as f:
+        f.write(template.render(recipes=recs))
+
+def _append_recipes(body, path, f):
     """ insert recipe information into a page
 
     can not handle files that are not in the webroot by itself
@@ -26,7 +55,7 @@ def append_recipes(body, path, f):
         a.text = html.escape(title)
         etree.SubElement(body, 'br')
 
-def update_index(path):
+def update_index_simple(path):
     """ write index.html in/for path """
     
     root = etree.Element('html')
@@ -40,7 +69,7 @@ def update_index(path):
     
     for f in os.listdir(path):
         if utils.extension(f) == 'xml':
-            append_recipes(body, path, f)
+            _append_recipes(body, path, f)
 
     with open(path + 'index.html', 'wb') as f:
         f.write(b'<!DOCTYPE HTML>')
