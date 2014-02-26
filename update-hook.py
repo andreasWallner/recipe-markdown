@@ -43,6 +43,10 @@ def main():
         action = f[4]
         file = ' '.join(f[5:])
         obj_id = f[3]
+        
+        if file.split('.')[-1] != 'rmd':
+            continue
+
         if action == 'M' or action == 'A' or action == 'C':
             r = process(obj_id,'/dev/null')
 
@@ -51,6 +55,10 @@ def main():
         action = c[4]
         file = ' '.join(c[5:])
         obj_id = c[3]
+        
+        if file.split('.')[-1] != 'rmd':
+            continue
+
         if action == 'D':
             print('D {}'.format(file))
             try:
