@@ -6,7 +6,9 @@ class Ingredient(object):
         self.name = name
         self.amount = amount
         self.unit = unit
-
+        
+        if name is None:
+            raise RecipeParseError('ingredient must not have None as a name')
         if amount is None and unit is not None:
             raise RecipeParseError('ingredient with unit must have amount')
 
@@ -103,12 +105,13 @@ class Phase(object):
         return not self == other
 
 class Recipe(object):
-    def __init__(self, title = None, size = None, source = None, author = None, phases = None):
+    def __init__(self, title = None, size = None, lang = None, source = None, author = None, phases = None):
         if phases == None:
             phases = []
 
         self.title = title
         self.size = size
+        self.lang = lang
         self.source = source
         self.author = author
         self.phases = phases
@@ -122,6 +125,8 @@ class Recipe(object):
             etree.SubElement(m, 'title').text = self.title
         if self.size is not None:
             etree.SubElement(m, 'size').text = self.size
+        if self.lang is not None:
+            etree.SubElement(m, 'lang').text = self.lang
         if self.source is not None:
             etree.SubElement(m, 'source').text = self.source
         if self.author is not None:
@@ -131,8 +136,8 @@ class Recipe(object):
             p.serialize(i)
 
     def __repr__(self):
-        return 'Recipe({!r}, {!r}, {!r}, {!r}, {!r})'.format(
-            self.title, self.size, self.source, self.author, self.phases)
+        return 'Recipe({!r}, {!r}, {!r}, {!r}, {!r}, {!r})'.format(
+            self.title, self.size, self.lang, self.source, self.author, self.phases)
 
     def __eq__(self, other):
         if not isinstance(other, Recipe):
@@ -140,6 +145,7 @@ class Recipe(object):
 
         return (self.title == other.title
             and self.size == other.size
+            and self.lang == other.lang
             and self.source == other.source
             and self.author == other.author
             and self.phases == other.phases)

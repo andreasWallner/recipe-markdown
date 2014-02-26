@@ -47,15 +47,20 @@ class parseMetaTest(unittest.TestCase):
         m = parseMeta('! size: for 4 people', r)
         self.assertEqual(r, Recipe(None, 'for 4 people'))
 
+    def test_lang(self):
+        r = Recipe()
+        m = parseMeta('! lang: de', r)
+        self.assertEqual(r, Recipe(None, None, 'de'))
+
     def test_source(self):
         r = Recipe()
         m = parseMeta('! source: internet', r)
-        self.assertEqual(r, Recipe(None, None, 'internet'))
+        self.assertEqual(r, Recipe(None, None, None, 'internet'))
 
     def test_author(self):
         r = Recipe()
         m = parseMeta('! author: myself', r)
-        self.assertEqual(r, Recipe(None, None, None, 'myself'))
+        self.assertEqual(r, Recipe(None, None, None, None, 'myself'))
 
     def test_unkown(self):
         with self.assertRaises(Exception) as context:
@@ -118,6 +123,7 @@ test_result = {
             None,
             None,
             None,
+            None,
             [
                 Phase(
                     [
@@ -132,6 +138,7 @@ test_result = {
         ],
     'multiphase' : [
         Recipe(
+            None,
             None,
             None,
             None,
@@ -167,6 +174,7 @@ test_result = {
     'multi_recipe' : [
         Recipe(
             'rec 1',
+            None,
             None,
             None,
             None,

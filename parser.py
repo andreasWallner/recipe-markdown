@@ -43,6 +43,8 @@ def parseMeta(line, recipe):
         recipe.title = val
     elif key == 'size':
         recipe.size = val
+    elif key == 'lang':
+        recipe.lang = val
     elif key == 'source':
         recipe.source = val
     elif key == 'author':
