@@ -116,9 +116,18 @@
           <div class="size"><xsl:value-of select="meta/size/text()" /></div>
           <table>
               <tr>
-                  <th>Zutat</th>
-                  <th>Menge</th>
-                  <th>Schritte</th>
+              <xsl:choose>
+                  <xsl:when test="lang = 'de'">
+                      <th>Zutat</th>
+                      <th>Menge</th>
+                      <th>Schritte</th>
+                  </xsl:when>
+                  <xsl:otherwise>
+                      <th>Ingredient</th>
+                      <th>Amount</th>
+                      <th>Steps</th>
+                  </xsl:otherwise>
+              </xsl:choose>
               </tr>
               <xsl:apply-templates select="instructions" />
           </table>
