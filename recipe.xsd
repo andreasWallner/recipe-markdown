@@ -19,6 +19,7 @@
         <xs:all>
             <xs:element name="title" type="xs:string" />
             <xs:element name="size" type="xs:string" minOccurs="0"/>
+            <xs:element name="lang" type="xs:string" minOccurs="0"/>
             <xs:element name="source" type="xs:string" minOccurs="0"/>
             <xs:element name="author" type="xs:string" minOccurs="0"/>
         </xs:all>
