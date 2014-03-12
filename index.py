@@ -26,11 +26,12 @@ def update_index_jinja(path):
             for r in _extract_data(path, f):
                 recs.append(r)
 
-    env = Environment(loader = FileSystemLoader('.'))
+    env = Environment(loader = FileSystemLoader(os.path.dirname(os.path.realpath(__file__))))
     template = env.get_template('index.jinja')
 
-    with open(path + 'index.html', 'w') as f:
-        f.write(template.render(recipes=recs))
+    # specify encoding explicitly, since the shell that git spawns us in does
+    # not have a locale set, so open() would default to ANSI_X3.4-1968
+    template.stream(recipes=recs).dump(path + 'index.html', encoding='utf-8')
 
 def _append_recipes(body, path, f):
     """ insert recipe information into a page
