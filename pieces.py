@@ -105,7 +105,7 @@ class Phase(object):
         return not self == other
 
 class Recipe(object):
-    def __init__(self, title = None, size = None, lang = None, source = None, author = None, phases = None):
+    def __init__(self, title = None, size = None, lang = None, source = None, author = None, description = None, phases = None):
         if phases == None:
             phases = []
 
@@ -115,6 +115,7 @@ class Recipe(object):
         self.source = source
         self.author = author
         self.phases = phases
+        self.description = description
 
     def serialize(self, element):
         r = etree.SubElement(element, 'recipe')
@@ -131,13 +132,15 @@ class Recipe(object):
             etree.SubElement(m, 'source').text = self.source
         if self.author is not None:
             etree.SubElement(m, 'author').text = self.author
+        if self.description is not None:
+            etree.SubElement(m, 'description').text = self.description
 
         for p in self.phases:
             p.serialize(i)
 
     def __repr__(self):
-        return 'Recipe({!r}, {!r}, {!r}, {!r}, {!r}, {!r})'.format(
-            self.title, self.size, self.lang, self.source, self.author, self.phases)
+        return 'Recipe({!r}, {!r}, {!r}, {!r}, {!r}, {!r}, {!r})'.format(
+            self.title, self.size, self.lang, self.source, self.author, self.description, self.phases)
 
     def __eq__(self, other):
         if not isinstance(other, Recipe):
@@ -148,7 +151,8 @@ class Recipe(object):
             and self.lang == other.lang
             and self.source == other.source
             and self.author == other.author
-            and self.phases == other.phases)
+            and self.phases == other.phases
+            and self.description == other.description)
 
     def __ne__(self, other):
         return not self == other

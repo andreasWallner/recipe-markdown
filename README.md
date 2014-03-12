@@ -43,7 +43,12 @@ Currently metadata may contain
 - author (writer of the recipe)
 - source (original source of the recipe)
 
-Metadata is written with a leading '!', followed by the type of metadata, a colon and the value.
+Metadata is written with a leading '!', followed by the type of metadata, a
+colon and the value.  After the first metadata line, all lines that can not be
+interpreted as anything else will also be considered metadata.
+A '!' also has to be used to mark the begin of a new recipe (since the metadata
+has to be at the beginning of the recipe, the first metadata line is sufficient
+for this)
 
 Then the recipe itself follows.
 
@@ -63,6 +68,9 @@ Example
 As an example, a simple recipe for a quiche lorraine:
 
     ! title: Quiche Lorraine
+    size: 1 28cm quiche pan
+    This would be the description for this very nice recipe, which is actually
+    legit and can be cooked like this.
 
     # 200g speck
     # 3pcs onion

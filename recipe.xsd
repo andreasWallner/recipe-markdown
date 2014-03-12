@@ -22,13 +22,14 @@
             <xs:element name="lang" type="xs:string" minOccurs="0"/>
             <xs:element name="source" type="xs:string" minOccurs="0"/>
             <xs:element name="author" type="xs:string" minOccurs="0"/>
+            <cs:element name="description" type="xs:string" minOccurs="0"/>
         </xs:all>
     </xs:complexType>
     
     <xs:complexType name="instructions">
         <xs:all>
             <xs:element name="phase" type="phase" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="comment" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="waitphase" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
         </xs:all>
     </xs:complexType>
     

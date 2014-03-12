@@ -41,6 +41,11 @@ class parseMetaTest(unittest.TestCase):
         r = Recipe()
         m = parseMeta('!title:my title', r)
         self.assertEqual(r, Recipe('my title'))
+
+    def test_nobang_title(self):
+        r = Recipe()
+        m = parseMeta(' title : foo', r)
+        self.assertEqual(r, Recipe('foo'))
     
     def test_size(self):
         r = Recipe()
@@ -62,15 +67,21 @@ class parseMetaTest(unittest.TestCase):
         m = parseMeta('! author: myself', r)
         self.assertEqual(r, Recipe(None, None, None, None, 'myself'))
 
+    def test_description(self):
+        r = Recipe()
+        m = parseMeta('! desc: first block', r)
+        m = parseMeta('! desc: second block', r)
+        self.assertEqual(r, Recipe(None, None, None, None, None, 'first block second block'))
+
+    def test_nokey_description(self):
+        r = Recipe()
+        m = parseMeta('simple test', r)
+        self.assertEqual(r, Recipe(None, None, None, None, None, 'simple test'))
+
     def test_unkown(self):
         with self.assertRaises(Exception) as context:
             parseMeta('! unknown: foo', None)
         self.assertEqual(context.exception.args[0], 'invalid metadata key')
-
-    def test_invalid(self):
-        with self.assertRaises(Exception) as context:
-            parseMeta('! not the excepted', None)
-        self.assertEqual(context.exception.args[0], 'invalid metadata line')
 
 class parseFileTest(unittest.TestCase):
     def test_simple(self):
@@ -109,8 +120,12 @@ test_input = {
         * this""",
     'multi_recipe' : """
         ! title: rec 1
+        ! desc: simple description
         # something
-        ! title: rec 2
+        !
+        title: rec 2
+        a not so simple description
+        that spans over two lines
         """,
     'meta_error' : """
         ! unknown: foo""",
@@ -120,6 +135,7 @@ test_result = {
     'simple' : [
         Recipe(
             'the title',
+            None,
             None,
             None,
             None,
@@ -138,6 +154,7 @@ test_result = {
         ],
     'multiphase' : [
         Recipe(
+            None,
             None,
             None,
             None,
@@ -178,6 +195,7 @@ test_result = {
             None,
             None,
             None,
+            'simple description',
             [
                 Phase(
                     [
@@ -187,7 +205,12 @@ test_result = {
                 ]
             ),
         Recipe(
-            'rec 2'
+            'rec 2',
+            None,
+            None,
+            None,
+            None,
+            'a not so simple description that spans over two lines'
             )
         ],
     }

@@ -140,45 +140,48 @@ class PhaseTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
         
 class RecipeTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_init(self):
-        r = Recipe('title', 'size', 'de', 'source', 'author')
+        r = Recipe('title', 'size', 'de', 'source', 'author', 'description')
         self.assertEqual(r.title, 'title')
         self.assertEqual(r.size, 'size')
         self.assertEqual(r.lang, 'de')
         self.assertEqual(r.source, 'source')
         self.assertEqual(r.author, 'author')
+        self.assertEqual(r.description, 'description')
         self.assertEqual(r.phases, [])
 
         p = Phase()
-        r = Recipe(None, None, None, None, None, [p])
+        r = Recipe(None, None, None, None, None, None, [p])
         self.assertEqual(r.title, None)
         self.assertEqual(r.size, None)
         self.assertEqual(r.lang, None)
         self.assertEqual(r.source, None)
         self.assertEqual(r.author, None)
+        self.assertEqual(r.description, None)
         self.assertEqual(r.phases, [p])
 
     def test_serialize(self):
         p = Phase()
-        r = Recipe('title', 'size', 'de', 'source', 'author', [p])
+        r = Recipe('title', 'size', 'de', 'source', 'author', 'description', [p])
         e = etree.Element('root')
         r.serialize(e)
 
         self.assertXmlEqual(etree.tounicode(e), serialization['recipe'])
     
     def test_repr(self):
-        r = Recipe('title', 'size', 'de', 'source', 'author')
-        self.assertEqual(repr(r), "Recipe('title', 'size', 'de', 'source', 'author', [])")
+        r = Recipe('title', 'size', 'de', 'source', 'author', 'description')
+        self.assertEqual(repr(r), "Recipe('title', 'size', 'de', 'source', 'author', 'description', [])")
 
     def test_compare(self):
         i = Ingredient('foo', None, None)
         self.assertRealEqual(Recipe(), Recipe())
-        self.assertRealEqual(Recipe('a', 'b', 'c', 'd', 'e', [Phase()]), Recipe('a', 'b', 'c', 'd', 'e', [Phase()]))
+        self.assertRealEqual(Recipe('a', 'b', 'c', 'd', 'e', 'f', [Phase()]), Recipe('a', 'b', 'c', 'd', 'e', 'f', [Phase()]))
         
         self.assertRealNotEqual(Recipe('a'), Recipe('b'))
         self.assertRealNotEqual(Recipe(None, 'a'), Recipe(None, 'b'))
         self.assertRealNotEqual(Recipe(None, None, 'a'), Recipe(None, None, 'b'))
         self.assertRealNotEqual(Recipe(None, None, None, 'a'), Recipe(None, None, None, 'b'))
-        self.assertRealNotEqual(Recipe(None, None, None, None, [Phase()]), Recipe(None, None, None, None, [Phase([i])]))
+        self.assertRealNotEqual(Recipe(None, None, None, None, 'a'), Recipe(None, None, None, None, 'b'))
+        self.assertRealNotEqual(Recipe(None, None, None, None, None, [Phase()]), Recipe(None, None, None, None, None, [Phase([i])]))
 
 if __name__ == '__main__':
     unittest.main()
@@ -200,6 +203,7 @@ serialization = {
                        <lang>de</lang>
                        <source>source</source>
                        <author>author</author>
+                       <description>description</description>
                      </meta>
                      <instructions>
                        <phase />

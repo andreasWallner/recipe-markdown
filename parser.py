@@ -30,14 +30,15 @@ def parseIngredient(line):
 
 
 def parseMeta(line, recipe):
-    r = r'^\s*!\s*([a-zA-Z]+)\s*:\s*(.*)'
+    r = r'^\s*!?\s*([a-zA-Z]+)\s*:\s*(.*)'
     result = re.match( r, line)
 
     if result is None:
-        raise Exception('invalid metadata line')
-
-    key = result.groups()[0]
-    val = result.groups()[1].rstrip(' \t')
+        key = 'desc'
+        val = line.lstrip('! \t').rstrip(' \t\n')
+    else:
+        key = result.groups()[0]
+        val = result.groups()[1].rstrip(' \t')
 
     if key == 'title':
         recipe.title = val
@@ -49,6 +50,11 @@ def parseMeta(line, recipe):
         recipe.source = val
     elif key == 'author':
         recipe.author = val
+    elif key == 'desc':
+        if recipe.description == None:
+            recipe.description = val
+        else:
+            recipe.description = recipe.description.strip() + ' ' + val
     else:
         raise Exception('invalid metadata key')
 
@@ -110,8 +116,8 @@ def parseFile(stream):
                     state = State.WaitPhase
                     continue
 
-                if start == '!':
-                    parseMeta( line, recipe)
+                # also interpret as metadata if there is no '!'
+                parseMeta( line, recipe)
 
 
             elif state == State.Ingredients:
