@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
-<head><title>Recipes</title></head>
+<head>
+    <meta charset="utf-8" />
+    <title>Recipes</title>
+</head>
 <body>
     {% for recipe in recipes %}
         <a href="{{ recipe.filename }}">{{ recipe.title }}</a><br />
