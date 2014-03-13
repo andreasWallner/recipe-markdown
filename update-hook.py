@@ -10,8 +10,10 @@ from lxml import etree
 from parser import parseFile
 from serializer import serializeRecipes
 
-TARGET='/var/www/localhost/htdocs/uhu01/recipes/'
-XSLT='recipe2html.xslt'
+# hook is being executed inside the repository, so add the hooks
+# directory to the path so that we can load our configuration from there
+sys.path.append(os.path.join(os.getcwd(), 'hooks'))
+import settings
 
 def process( obj_id, target):
     """ get file from git, process, write to target folder
@@ -23,15 +25,16 @@ def process( obj_id, target):
     stream = io.TextIOWrapper( git.blob_file_handle(obj_id), encoding='utf8')
     r = parseFile(stream)
     rec = serializeRecipes(r)
-    rec.addprevious(etree.ProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' + XSLT + '"'))
+    rec.addprevious(etree.ProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' + settings.XSLT + '"'))
     et = etree.ElementTree(rec)
     et.write(target,xml_declaration=True,pretty_print=True,encoding='UTF-8')
 
 def xml_filename(name):
     clean = name.rstrip('.rmd')
-    return TARGET + clean + '.xml'
+    return settings.TARGET + clean + '.xml'
 
 def main():
+    os.umask(settings.UMASK)
     (ref,old,new) = sys.argv[1:4]
 
     print('starting processing of commit')
@@ -73,7 +76,7 @@ def main():
         else:
             print('unknown git status {} of <{}>'.format(action,file), file=sys.stderr)
 
-    index.update_index(TARGET)
+    index.update_index(settings.TARGET)
 
     print('finished processing of commits')
 

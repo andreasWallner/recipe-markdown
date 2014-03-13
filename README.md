@@ -88,3 +88,17 @@ As an example, a simple recipe for a quiche lorraine:
     * line dish with pastry
     * fill pastry with the mixture
     * bake in the preheated oven at 180°C, for 30 to 35 minutes
+
+Installation
+------------
+
+Installation is pretty simple.
+
+- checkout the recipe-markdown code (e.g. to /opt)
+- if necessary, make update-trigger.py executable
+- create a new repository to hold your recipes
+- in this repositories hooks folder, create a link named "update" that links to
+  update-trigger.py
+- copy settings\_template.py to the hooks folder and rename it to settings.py
+- edit settings.py to suite your needs
+- use recipe-markdown by pushing recipes into the repository
