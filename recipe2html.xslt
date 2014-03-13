@@ -118,7 +118,7 @@
           <table>
               <tr>
               <xsl:choose>
-                  <xsl:when test="lang = 'de'">
+                  <xsl:when test="meta/lang = 'de'">
                       <th>Zutat</th>
                       <th>Menge</th>
                       <th>Schritte</th>
