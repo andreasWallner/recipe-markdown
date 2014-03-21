@@ -100,7 +100,7 @@
                         line-height:1.2em;
                         display:inline-block;
                         margin-right:0.4em;
-                        margin-bottom:0.2em;
+                        margin-top:0.2em;
                     }
                 </style>
             </head>
@@ -149,11 +149,16 @@
             <td class="ingredient"><xsl:for-each select="ingredient"><xsl:value-of select="name/text()" /><br /></xsl:for-each></td>
             <td class="amount"><xsl:for-each select="ingredient"><xsl:value-of select="amount/text()" /><xsl:text> </xsl:text><xsl:value-of select="unit/text()" /><br /></xsl:for-each></td>
             <td class="step"><xsl:for-each select="step">
-                <div class="numberCircle">
-                    <xsl:value-of select="count(preceding::step)+1" />
+                <div style="display:container">
+                    <div style="display:table-row">
+                        <div style="display:table-cell;vertical-align:top">
+                            <div class="numberCircle"><xsl:value-of select="count(preceding::step)+1" /></div>
+                        </div>
+                        <div style="display:table-cell">
+                            <xsl:value-of select="text()" />
+                        </div>
+                    </div>
                 </div>
-                <xsl:value-of select="text()" />
-                <br />
             </xsl:for-each></td>
         </tr>
     </xsl:template>
