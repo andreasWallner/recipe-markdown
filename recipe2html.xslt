@@ -148,18 +148,22 @@
         <tr>
             <td class="ingredient"><xsl:for-each select="ingredient"><xsl:value-of select="name/text()" /><br /></xsl:for-each></td>
             <td class="amount"><xsl:for-each select="ingredient"><xsl:value-of select="amount/text()" /><xsl:text> </xsl:text><xsl:value-of select="unit/text()" /><br /></xsl:for-each></td>
-            <td class="step"><xsl:for-each select="step">
-                <div style="display:container">
-                    <div style="display:table-row">
-                        <div style="display:table-cell;vertical-align:top">
-                            <div class="numberCircle"><xsl:value-of select="count(preceding::step)+1" /></div>
+            <td class="step">
+                <div style="display:container;margin:0;padding:0">
+                    <xsl:for-each select="step">
+                        <div style="display:table-row">
+                             <div style="display:table-cell;vertical-align:top">
+                                 <div class="numberCircle" style="float:left">
+                                    <xsl:value-of select="count(preceding::step)+1" />
+                                 </div>
+                             </div>
+                             <div style="display:table-cell">
+                                <xsl:value-of select="text()" />
+                             </div>
                         </div>
-                        <div style="display:table-cell">
-                            <xsl:value-of select="text()" />
-                        </div>
-                    </div>
+                    </xsl:for-each>
                 </div>
-            </xsl:for-each></td>
+            </td>
         </tr>
     </xsl:template>
 
