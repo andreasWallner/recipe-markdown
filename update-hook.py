@@ -80,7 +80,5 @@ def main():
 
     print('finished processing of commits')
 
-    exit(1)
-
 if __name__ == '__main__':
     main()
