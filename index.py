@@ -1,6 +1,7 @@
 import os
 import utils
 from lxml import etree
+from operator import itemgetter
 try:
     from jinja2 import Environment, FileSystemLoader
     update_index = lambda p: update_index_jinja(p)
@@ -25,6 +26,7 @@ def update_index_jinja(path):
         if utils.extension(f) == 'xml':
             for r in _extract_data(path, f):
                 recs.append(r)
+    recs = sorted(recs, key=itemgetter('title'))
 
     env = Environment(loader = FileSystemLoader(os.path.dirname(os.path.realpath(__file__))))
     template = env.get_template('index.jinja')
