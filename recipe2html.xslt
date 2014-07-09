@@ -154,7 +154,7 @@
                         <div style="display:table-row">
                              <div style="display:table-cell;vertical-align:top">
                                  <div class="numberCircle" style="float:left">
-                                    <xsl:value-of select="count(preceding::step)+1" />
+                                    <xsl:value-of select="count(ancestor::recipe/descendant::step[count(.|current()/preceding::step)=count(current()/preceding::step)])+1" />
                                  </div>
                              </div>
                              <div style="display:table-cell">
