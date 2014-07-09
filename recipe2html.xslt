@@ -132,12 +132,34 @@
               </tr>
               <xsl:apply-templates select="instructions" />
           </table>
-          <div class="source"><xsl:value-of select="meta/source/text()" /><xsl:text> </xsl:text><xsl:apply-templates select="meta/author" /></div>
-        </div>
+          <div class="source"><xsl:apply-templates select="meta/source" /><xsl:text> </xsl:text><xsl:apply-templates select="meta/author" /></div>
+        </div><br />
     </xsl:template>
-    
+
+    <xsl:template match="source">
+        <xsl:choose>
+	    <xsl:when test="text() = ''">
+	    </xsl:when>
+	    <xsl:when test="parent::meta/lang = 'de'">
+	        <xsl:text>Rezept von </xsl:text><xsl:value-of select="text()" /><xsl:text> </xsl:text>
+	    </xsl:when>
+	    <xsl:otherwise>
+	        <xsl:text>Recipe by </xsl:text><xsl:value-of select="text()" /><xsl:text> </xsl:text>
+	    </xsl:otherwise>
+	</xsl:choose>
+    </xsl:template>
+
     <xsl:template match="author">
-        <xsl:text>recorded by </xsl:text><xsl:value-of select="text()" />
+        <xsl:choose>
+	    <xsl:when test="text() = ''">
+	    </xsl:when>
+	    <xsl:when test="parent::meta/lang = 'de'">
+	        <xsl:text>niedergeschrieben von </xsl:text><xsl:value-of select="text()" />
+	    </xsl:when>
+	    <xsl:otherwise>
+                <xsl:text>recorded by </xsl:text><xsl:value-of select="text()" />
+	    </xsl:otherwise>
+	</xsl:choose>
     </xsl:template>
     
     <xsl:template match="instructions">
