@@ -44,7 +44,7 @@ def main():
     # do a dry run to catch errors
     for f in cf:
         action = f[4]
-        file = ' '.join(f[5:])
+        file = f[5]
         obj_id = f[3]
         
         if file.split('.')[-1] != 'rmd':
@@ -56,7 +56,7 @@ def main():
     # do a real run
     for c in cf:
         action = c[4]
-        file = ' '.join(c[5:])
+        file = c[5])
         obj_id = c[3]
         
         if file.split('.')[-1] != 'rmd':
