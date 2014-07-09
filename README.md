@@ -102,3 +102,12 @@ Installation is pretty simple.
 - copy settings\_template.py to the hooks folder and rename it to settings.py
 - edit settings.py to suite your needs
 - use recipe-markdown by pushing recipes into the repository
+
+Fixing Problems
+---------------
+
+If there was a problem and some recipes are not correctly updated anymore
+consider running reprocess-all.py in the hooks directory of the repository.
+
+It will delete all created XML files and the index and generate them anew from
+the rmd files at the current repository HEAD.
