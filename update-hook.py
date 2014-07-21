@@ -56,7 +56,7 @@ def main():
     # do a real run
     for c in cf:
         action = c[4]
-        file = c[5])
+        file = c[5]
         obj_id = c[3]
         
         if file.split('.')[-1] != 'rmd':
