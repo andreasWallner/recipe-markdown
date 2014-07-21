@@ -92,7 +92,9 @@ As an example, a simple recipe for a quiche lorraine:
 Installation
 ------------
 
-Installation is pretty simple.
+Installation is pretty simple if you are using a standard git repository.
+If you manage your repositories with gitolite replace the 4th step with the
+actions appropriate for your version of gitolite (see gitolite docs).
 
 - checkout the recipe-markdown code (e.g. to /opt)
 - if necessary, make update-trigger.py executable
