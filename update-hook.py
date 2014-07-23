@@ -30,7 +30,9 @@ def process( obj_id, target):
     et.write(target,xml_declaration=True,pretty_print=True,encoding='UTF-8')
 
 def xml_filename(name):
-    clean = name.rstrip('.rmd')
+    if not name.endswith('.rmd'):
+        raise Exception('Invalid file extension for recipe ({})'.format(name))
+    clean = name[0:-4]
     return settings.TARGET + clean + '.xml'
 
 def main():
