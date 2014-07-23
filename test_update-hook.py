@@ -56,7 +56,7 @@ class tests(unittest.TestCase, utils.TypeCheckMixin):
             _write_file('add.rmd', add_text)
             _run_command(['git', 'add', '.'])
             _run_command(['git', 'commit', '-m', 'add step'])
-            op = _run_command(['git', 'push', 'target', 'master'])
+            _run_command(['git', 'push', 'target', 'master'])
 
         with utils.ChangeDir(outdir):
             self.assertTrue(os.path.isfile('add.xml'), 'Xml has not been generated')
