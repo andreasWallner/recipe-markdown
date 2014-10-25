@@ -23,6 +23,8 @@ def _extract_data(path, f):
 def update_index_jinja(path):
     recs = []
     for f in os.listdir(path):
+        # encoding dance to deal with surrogate characters from listdir
+        f = f.encode('utf-8', 'surrogateescape').decode('utf-8')
         if utils.extension(f) == 'xml':
             for r in _extract_data(path, f):
                 recs.append(r)
@@ -71,6 +73,8 @@ def update_index_simple(path):
     body = etree.SubElement(root, 'body')
     
     for f in os.listdir(path):
+        # encoding dance to deal with surrogate characters from listdir
+        f = f.encode('utf-8', 'surrogateescape').decode('utf-8')
         if utils.extension(f) == 'xml':
             _append_recipes(body, path, f)
 
