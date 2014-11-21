@@ -73,6 +73,22 @@ class parseMetaTest(unittest.TestCase):
         m = parseMeta('! desc: second block', r)
         self.assertEqual(r, Recipe(None, None, None, None, None, 'first block second block'))
 
+    def test_keyword(self):
+        r = Recipe()
+        m = parseMeta('! keywords: austrian', r)
+        self.assertEqual(r, Recipe(None, None, None, None, None, None, None, ['austrian']))
+
+    def test_multiple_keyword(self):
+        r = Recipe()
+        m = parseMeta('! keywords: austrian, vegan, funny, own recipe ', r)
+        self.assertEqual(r, Recipe(keywords=['austrian', 'vegan', 'funny', 'own recipe']))
+
+    def test_multiple_keyword_lines(self):
+        r = Recipe()
+        m = parseMeta('! keywords: line 1', r)
+        m = parseMeta('! keywords: line 2', r)
+        self.assertEqual(r, Recipe(keywords=['line 1', 'line 2']))
+
     def test_nokey_description(self):
         r = Recipe()
         m = parseMeta('simple test', r)

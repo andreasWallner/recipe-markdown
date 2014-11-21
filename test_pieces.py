@@ -161,7 +161,7 @@ class RecipeTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
 
     def test_serialize(self):
         p = Phase()
-        r = Recipe('title', 'size', 'de', 'source', 'author', 'description', [p])
+        r = Recipe('title', 'size', 'de', 'source', 'author', 'description', [p], ['k1', 'k2'])
         e = etree.Element('root')
         r.serialize(e)
 
@@ -174,14 +174,21 @@ class RecipeTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_compare(self):
         i = Ingredient('foo', None, None)
         self.assertRealEqual(Recipe(), Recipe())
-        self.assertRealEqual(Recipe('a', 'b', 'c', 'd', 'e', 'f', [Phase()]), Recipe('a', 'b', 'c', 'd', 'e', 'f', [Phase()]))
+        self.assertRealEqual(Recipe('a', 'b', 'c', 'd', 'e', 'f', [Phase()], ['k']), Recipe('a', 'b', 'c', 'd', 'e', 'f', [Phase()], ['k']))
         
         self.assertRealNotEqual(Recipe('a'), Recipe('b'))
+        self.assertRealNotEqual(Recipe(None, 'a'), Recipe())
         self.assertRealNotEqual(Recipe(None, 'a'), Recipe(None, 'b'))
+        self.assertRealNotEqual(Recipe(None, None, 'a'), Recipe())
         self.assertRealNotEqual(Recipe(None, None, 'a'), Recipe(None, None, 'b'))
+        self.assertRealNotEqual(Recipe(None, None, None, 'a'), Recipe())
         self.assertRealNotEqual(Recipe(None, None, None, 'a'), Recipe(None, None, None, 'b'))
+        self.assertRealNotEqual(Recipe(None, None, None, None, 'a'), Recipe())
         self.assertRealNotEqual(Recipe(None, None, None, None, 'a'), Recipe(None, None, None, None, 'b'))
+        self.assertRealNotEqual(Recipe(None, None, None, None, None, [Phase()]), Recipe())
         self.assertRealNotEqual(Recipe(None, None, None, None, None, [Phase()]), Recipe(None, None, None, None, None, [Phase([i])]))
+        self.assertRealNotEqual(Recipe(None, None, None, None, None, None, ['a']), Recipe())
+        self.assertRealNotEqual(Recipe(None, None, None, None, None, None, ['a']), Recipe(None, None, None, None, None, None, ['b']))
 
 if __name__ == '__main__':
     unittest.main()
@@ -204,6 +211,10 @@ serialization = {
                        <source>source</source>
                        <author>author</author>
                        <description>description</description>
+                       <keywords>
+                         <keyword>k1</keyword>
+                         <keyword>k2</keyword>
+                       </keywords>
                      </meta>
                      <instructions>
                        <phase />
