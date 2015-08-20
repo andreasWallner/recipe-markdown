@@ -1,5 +1,7 @@
 import os
 import utils
+import json
+from os import path
 from lxml import etree
 from operator import itemgetter
 try:
@@ -11,7 +13,7 @@ except ImportError:
 
 def _extract_data(path, f):
     recipes = []
-    xml = etree.parse(path + f)
+    xml = etree.parse(path.join([path, f]))
     for r in xml.xpath('//recipe'):
         meta = {'filename' : f}
         for m in r.xpath('meta/*'):
@@ -20,7 +22,7 @@ def _extract_data(path, f):
         recipes.append(meta)
     return recipes
 
-def update_index_jinja(path):
+def _collect_data(path):
     recs = []
     for f in os.listdir(path):
         # encoding dance to deal with surrogate characters from listdir
@@ -29,6 +31,10 @@ def update_index_jinja(path):
             for r in _extract_data(path, f):
                 recs.append(r)
     recs = sorted(recs, key=itemgetter('title'))
+    return recs
+
+def update_index_jinja(path):
+    recs = _collect_data(path)
 
     env = Environment(loader = FileSystemLoader(os.path.dirname(os.path.realpath(__file__))))
     template = env.get_template('index.jinja')
@@ -36,6 +42,13 @@ def update_index_jinja(path):
     # specify encoding explicitly, since the shell that git spawns us in does
     # not have a locale set, so open() would default to ANSI_X3.4-1968
     template.stream(recipes=recs).dump(path + 'index.html', encoding='utf-8')
+
+def update_json(path):
+    """ write index.json in/for path """
+    recs = _collect_data(path)
+
+    with open(path + '/metadata.json', 'w') as fp:
+        json.dump(recs, fp, indent=2)
 
 def _append_recipes(body, path, f):
     """ insert recipe information into a page
@@ -81,3 +94,6 @@ def update_index_simple(path):
     with open(path + 'index.html', 'wb') as f:
         f.write(b'<!DOCTYPE HTML>')
         etree.ElementTree(root).write(f, encoding='utf-8')
+
+
+    

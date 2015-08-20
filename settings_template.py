@@ -8,3 +8,6 @@ XSLT='recipe2html.xslt'
 # needed since the gitosis shell has no
 # defaults set up
 UMASK=0o022
+
+# extension used for markdown files
+EXTENSION='rmd'

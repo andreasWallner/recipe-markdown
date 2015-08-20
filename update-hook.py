@@ -9,31 +9,12 @@ from lxml import etree
 
 from parser import parseFile
 from serializer import serializeRecipes
+import common
 
 # hook is being executed inside the repository, so add the hooks
 # directory to the path so that we can load our configuration from there
 sys.path.append(os.path.join(os.getcwd(), 'hooks'))
 import settings
-
-def process( obj_id, target):
-    """ get file from git, process, write to target folder
-
-    Arguments:
-    obj_id -- git object id of the file (as string)
-    target -- target folder path (as string, with trailing slash)
-    """
-    stream = io.TextIOWrapper( git.blob_file_handle(obj_id), encoding='utf8')
-    r = parseFile(stream)
-    rec = serializeRecipes(r)
-    rec.addprevious(etree.ProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' + settings.XSLT + '"'))
-    et = etree.ElementTree(rec)
-    et.write(target,xml_declaration=True,pretty_print=True,encoding='UTF-8')
-
-def xml_filename(name):
-    if not name.endswith('.rmd'):
-        raise Exception('Invalid file extension for recipe ({})'.format(name))
-    clean = name[0:-4]
-    return settings.TARGET + clean + '.xml'
 
 def main():
     os.umask(settings.UMASK)
@@ -49,11 +30,11 @@ def main():
         file = f[5]
         obj_id = f[3]
         
-        if file.split('.')[-1] != 'rmd':
+        if file.split('.')[-1] != settings.EXTENSION:
             continue
 
         if action == 'M' or action == 'A' or action == 'C':
-            r = process(obj_id,'/dev/null')
+            r = common.process(obj_id,'/dev/null')
 
     # do a real run
     for c in cf:
@@ -61,24 +42,25 @@ def main():
         file = c[5]
         obj_id = c[3]
         
-        if file.split('.')[-1] != 'rmd':
+        if file.split('.')[-1] != settings.EXTENSION:
             continue
 
         if action == 'D':
             print('D {}'.format(file))
             try:
-                os.remove(xml_filename(file))
+                os.remove(common.xml_filename(file))
             except FileNotFoundError:
                 print('file to be removed, but could not be found'.format(file))
 
         elif action == 'M' or action == 'A' or action == 'C':
             print('C {}'.format(file))
-            process(obj_id, xml_filename(file))
+            common.process(obj_id, common.xml_filename(file))
 
         else:
-            print('unknown git status {} of <{}>'.format(action,file), file=sys.stderr)
+            print('unknown git status {} of <{}>'.format(action, file), file=sys.stderr)
 
     index.update_index(settings.TARGET)
+    index.update_json(settings.TARGET)
 
     print('finished processing of commits')
 
