@@ -146,8 +146,8 @@ class Recipe(object):
             p.serialize(i)
 
     def __repr__(self):
-        return 'Recipe({!r}, {!r}, {!r}, {!r}, {!r}, {!r}, {!r})'.format(
-            self.title, self.size, self.lang, self.source, self.author, self.description, self.phases)
+        return 'Recipe({!r}, {!r}, {!r}, {!r}, {!r}, {!r}, {!r}, {!r})'.format(
+            self.title, self.size, self.lang, self.source, self.author, self.description, self.phases, self.keywords)
 
     def __eq__(self, other):
         if not isinstance(other, Recipe):
@@ -159,7 +159,8 @@ class Recipe(object):
             and self.source == other.source
             and self.author == other.author
             and self.phases == other.phases
-            and self.description == other.description)
+            and self.description == other.description
+            and set(self.keywords) == set(other.keywords))
 
     def __ne__(self, other):
         return not self == other

@@ -169,12 +169,13 @@ class RecipeTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     
     def test_repr(self):
         r = Recipe('title', 'size', 'de', 'source', 'author', 'description')
-        self.assertEqual(repr(r), "Recipe('title', 'size', 'de', 'source', 'author', 'description', [])")
+        self.assertEqual(repr(r), "Recipe('title', 'size', 'de', 'source', 'author', 'description', [], [])")
 
     def test_compare(self):
         i = Ingredient('foo', None, None)
         self.assertRealEqual(Recipe(), Recipe())
         self.assertRealEqual(Recipe('a', 'b', 'c', 'd', 'e', 'f', [Phase()], ['k']), Recipe('a', 'b', 'c', 'd', 'e', 'f', [Phase()], ['k']))
+        self.assertRealEqual(Recipe(None, None, None, None, None, None, None, ['a', 'b']), Recipe(None, None, None, None, None, None, None, ['b', 'a']))
         
         self.assertRealNotEqual(Recipe('a'), Recipe('b'))
         self.assertRealNotEqual(Recipe(None, 'a'), Recipe())
@@ -189,6 +190,7 @@ class RecipeTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
         self.assertRealNotEqual(Recipe(None, None, None, None, None, [Phase()]), Recipe(None, None, None, None, None, [Phase([i])]))
         self.assertRealNotEqual(Recipe(None, None, None, None, None, None, ['a']), Recipe())
         self.assertRealNotEqual(Recipe(None, None, None, None, None, None, ['a']), Recipe(None, None, None, None, None, None, ['b']))
+        self.assertRealNotEqual(Recipe(None, None, None, None, None, None, None, ['a']), Recipe(None, None, None, None, None, None, None, ['b']))
 
 if __name__ == '__main__':
     unittest.main()
