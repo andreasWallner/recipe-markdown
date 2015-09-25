@@ -161,7 +161,7 @@ class RecipeTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
 
     def test_serialize(self):
         p = Phase()
-        r = Recipe('title', 'size', 'de', 'source', 'author', 'description', [p], ['k1', 'k2'])
+        r = Recipe('title', 'size', 'de', 'source', 'author', 'description', [p], ['k1', 'k2'], ['img1.jpg', 'img2.jpg'])
         e = etree.Element('root')
         r.serialize(e)
 
@@ -217,6 +217,10 @@ serialization = {
                          <keyword>k1</keyword>
                          <keyword>k2</keyword>
                        </keywords>
+                       <images>
+                         <img>img1.jpg</img>
+                        <img>img2.jpg</img>
+                       </images>
                      </meta>
                      <instructions>
                        <phase />
