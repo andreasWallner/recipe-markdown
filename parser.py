@@ -4,23 +4,97 @@ from errors import *
 from utils import *
 from lxml import etree
 
-class State:
-    class Waiting: pass
-    class Meta: pass
-    class Ingredients: pass
-    class Steps: pass
+
+class Line:
+    """Holds the type and contents of a line, e.g. an ingredient or an instruction.
+
+    In case that word wrapping was used in the original markup, one Line class can
+    actually hold the contents of multiple lines in the source code belonging to the
+    same ingredient, instruction etc.
+    """
+    class Empty: pass
+    class Plain: pass
+    class Comment: pass
+    class Command: pass
+    class Part: pass
+    class Ingredient: pass
+    class Step: pass
+    class Note: pass
     class WaitPhase: pass
-    class FinishPhase: pass
-    class FinishRecipe: pass
+
+    startCharacters = (
+        ("'", Comment),
+        ('!', Command),
+        ('=', Part),
+        ('#', Ingredient),
+        ('**', Note), # notes have to be parsed before instructions!
+        ('*', Step),
+        ('+', WaitPhase),
+    )
+
+    def __init__(self, lineType = None, lineNo = None, contents = None):
+        self.lineType = lineType
+        self.lineNo = lineNo
+        self.contents = contents
+
+    def __repr__(self):
+        return 'Line({!r}, {!r}, {!r})'.format(self.lineType, self.lineNo, self.contents)
+
+    @property
+    def contents(self):
+        if isinstance(self._contents, str):
+            return self._contents
+        else:
+            return ' '.join(self._contents)
+
+    @contents.setter
+    def contents(self, contents):
+        self._contents = contents
+
+    def append(self, contents):
+        if isinstance(self._contents, str):
+            self._contents = [self._contents, contents]
+        else:
+            self._contents.append(contents)
+
+def preprocessLines(stream):
+    """Generator that joins word wrapped lines back together and parses the type of the line,
+    e.g. ingredient or step. Yields instances of the Line class.
+    """
+    currentLine = None
+    for lineNo, rawLine in enumerate(stream, 1):
+        lineType = None
+        contents = rawLine.strip()
+        for c, t in Line.startCharacters:
+            if contents.startswith(c):
+                lineType = t
+                contents = contents[len(c):].lstrip()
+                break
+
+        if lineType == None:
+            if len(contents) == 0:
+                if currentLine:
+                    yield currentLine
+                    currentLine = None
+                yield Line(Line.Empty, lineNo, '')
+            elif currentLine:
+                currentLine.append(contents)
+            else:
+                lineType = Line.Plain
+
+        if lineType != None:
+            if currentLine:
+                yield currentLine
+            currentLine = Line(lineType, lineNo, contents)
+    if currentLine:
+        yield currentLine
 
 def parseIngredient(line):
-    r = r'^\s*#\s*([0-9/\.]+(?:\s+[0-9/]+)?)([a-zA-Z]+)?\s+(.*)'
+    r = r'^\s*([0-9/\.]+(?:\s+[0-9/]+)?)([a-zA-Z]+)?\s+(.*)'
     result = re.match( r, line)
 
     if result is None:
-        line = line.lstrip('# \t')
-        line = line.rstrip(' \t\n')
-        return Ingredient( line, None, None)
+        return Ingredient(line, None, None)
 
     return Ingredient(
         result.groups()[2].rstrip(),
@@ -28,18 +102,16 @@ def parseIngredient(line):
         result.groups()[1],
         )
 
-
-def parseMeta(line, recipe):
-    r = r'^\s*!?\s*([a-zA-Z]+)\s*:\s*(.*)'
-    result = re.match( r, line)
-
-    if result is None:
-        key = 'desc'
-        val = line.lstrip('! \t').rstrip(' \t\n')
-    else:
+def splitCommand(line):
+    r = r'^\s*([a-zA-Z]+)\s*:\s*(.*)'
+    result = re.match(r, line)
+    if result:
         key = result.groups()[0]
-        val = result.groups()[1].rstrip(' \t')
+        val = result.groups()[1]
+        return key, val
+    return None, None
 
+def parseMeta(key, val, recipe):
     if key == 'title':
         recipe.title = val
     elif key == 'size':
@@ -54,6 +126,7 @@ def parseMeta(line, recipe):
         if recipe.description == None:
             recipe.description = val
         else:
+            #TODO: use a list with a string for each paragraph and extend the XML format
             recipe.description = recipe.description.strip() + ' ' + val
     elif key == 'keywords':
         kws = val.split(',')
@@ -64,129 +137,74 @@ def parseMeta(line, recipe):
     else:
         raise Exception('invalid metadata key')
 
-def parseWaitPhase(line, waitphase):
-    line = line.lstrip(' \t+')
-    line = line.rstrip(' \t\n')
-    if waitphase.text is None:
-        waitphase.text = line
-    else:
-        waitphase.text = waitphase.text + ' ' + line
-
 def parseFile(stream):
     recipes = []
-
-    phase = Phase()
-    recipe = Recipe()
-    waitphase = WaitPhase()
-
-    state = State.Waiting
-
-    line = ''
-    line_nr = 0
-
+    line = Line()
     try:
-        while True:
-            line = line.lstrip(' \t')
-            if len(line) > 0:
-                start = line[0]
-            else:
-                start = ''
+        recipe = None
+        phase = None
+        meta = False
+        for line in preprocessLines(stream):
+            if line.lineType == Line.Command:
+                key, value = splitCommand(line.contents)
+                if recipe and key == 'title':
+                    recipe = None
+                if not recipe:
+                    if key != 'title':
+                        raise Exception('recipes must start with a title')
+                    recipe = Recipe()
+                    recipes.append(recipe)
+                    meta = True
+                if meta:
+                    parseMeta(key, value, recipe)
+                else:
+                    raise Exception('commands are not yet used (metadata must appear at the beginning of the recipe)')
 
-            if state == State.Waiting:
-                if start == '!':
-                    state = State.Meta
-                    continue
-                
-                if start == '#':
-                    state = State.Ingredients
-                    continue
+            elif line.lineType == Line.Plain:
+                if len(recipe.phases):
+                    raise Exception('plain lines are only allowed for description at the beginning of the recipe')
+                parseMeta('desc', line.contents, recipe)
 
-                if start == '*':
-                    state = State.Steps
-                    continue
+            elif line.lineType == Line.Part:
+                raise Exception('parts are not implemented yet')
 
-                if start == '+':
-                    state = State.WaitPhase
-                    continue
+            elif line.lineType == Line.Ingredient:
+                if not recipe:
+                    raise Exception('ingredient outside of recipe')
+                meta = False
+                if not phase or len(phase.steps):
+                    phase = Phase()
+                    recipe.phases.append(phase)
+                phase.ingredients.append(parseIngredient(line.contents))
 
-            if state == State.Meta:
-                if not line:
-                    state = State.FinishRecipe
-                    continue
+            elif line.lineType == Line.Step:
+                if not recipe:
+                    raise Exception('step outside of recipe')
+                meta = False
+                if not phase:
+                    phase = Phase()
+                    recipe.phases.append(phase)
+                phase.steps.append(Step(line.contents))
 
-                if start == '#' or start == '*':
-                    state = State.Ingredients
-                    continue
+            elif line.lineType == Line.Note:
+                raise Exception('notes are not implemented yet')
 
-                if start == '+':
-                    state = State.WaitPhase
-                    continue
+            elif line.lineType == Line.WaitPhase:
+                if not recipe:
+                    raise Exception('Wait phase occurred outside of recipe')
+                meta = False
+                phase = None
+                waitphase = WaitPhase(line.contents)
+                recipe.phases.append(waitphase)
 
-                # also interpret as metadata if there is no '!'
-                parseMeta( line, recipe)
-
-
-            elif state == State.Ingredients:
-                if start == '!' or start == '+' or not line:
-                    state = State.FinishPhase
-                    continue
-
-                if start == '*':
-                    state = State.Steps
-                    continue
-                
-                if start == '#':
-                    phase.ingredients.append(parseIngredient(line))
-
-            elif state == State.Steps:
-                if start == '!' or start == '#' or start == '+' or not line:
-                    state = State.FinishPhase
-                    continue
-
-                if start == '*':
-                    line = line.lstrip('* \t')
-                    line = line.rstrip(' \t\n')
-                    phase.steps.append(Step(line))
-
-            elif state == State.WaitPhase:
-                if start == '!' or start == '#' or start == '*' or not line:
-                    recipe.phases.append(waitphase)
-                    waitphase = WaitPhase()
-                    if start == '!' or not line:
-                        state = State.FinishRecipe
-                    elif start == '#':
-                        state = State.Ingredients
-                    elif start == '*':
-                        state = State.Steps
-                    continue
-                elif start == '+':
-                    parseWaitPhase(line, waitphase)
-           
-            elif state == State.FinishPhase:
-                recipe.phases.append(phase)
-                phase = Phase()
-                if start == '!' or not line:
-                    state = State.FinishRecipe
-                elif start == '#':
-                    state = State.Ingredients
-                elif start == '+':
-                    state = State.WaitPhase
-                continue
-
-            elif state == State.FinishRecipe:
-                recipes.append(recipe)
-                recipe = Recipe()
-                state = State.Waiting
-                continue
-
-            line = stream.readline()
-            if not line and state == State.Waiting:
-                break
-            else:
-                line_nr += 1
+            elif line.lineType == Line.Empty:
+                meta = False # to allow progress images at the beginning of the recipe
+                if phase:
+                    phase = None
+            elif line.lineType != Line.Comment:
+                raise Exception('invalid line type')
 
     except Exception as e:
-        line = line.rstrip('\n')
-        raise RecipeParseError(line, line_nr) from e
+        raise RecipeParseError(line.contents, line.lineNo) from e
 
     return recipes
