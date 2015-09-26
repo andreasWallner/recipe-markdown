@@ -32,7 +32,7 @@ The markdown format contains three types of information:
 - wait phases
 
 The metadata block is located at the beginning of the recipe block, ingredients
-and steps are mixed because if the intended output format. Ingredients for a
+and steps are mixed because of the intended output format. Ingredients for a
 specific block come first, then the steps to perform with the mentioned
 ingredients. Wait phases are steps in the recipe that primarily contain of
 waiting.
@@ -42,13 +42,18 @@ Currently metadata may contain
 - size (how many people can you feed)
 - author (writer of the recipe)
 - source (original source of the recipe)
+- images
+
+For tag names have a look at the example below.
 
 Metadata is written with a leading '!', followed by the type of metadata, a
 colon and the value.  After the first metadata line, all lines that can not be
 interpreted as anything else will also be considered metadata.
 A '!' also has to be used to mark the begin of a new recipe (since the metadata
 has to be at the beginning of the recipe, the first metadata line is sufficient
-for this)
+for this).
+
+Currently for images to be displayed they have to be placed in the same folder the output files will be generated for. This currently poses a problem if you use a git repository and want the files to be generated outside the repo.
 
 Then the recipe itself follows.
 
@@ -67,11 +72,14 @@ Example
 
 As an example, a simple recipe for a quiche lorraine:
 
-    ! title: Quiche Lorraine
-    size: 1 28cm quiche pan
+    !title: Quiche Lorraine
+    !size: 1 28cm quiche pan
+    !author: uhu01
+    !source: 
+    !img: very_nice_image.png
     This would be the description for this very nice recipe, which is actually
     legit and can be cooked like this.
-
+    
     # 200g speck
     # 3pcs onion
     * cut speck into cubes, onion into rings
