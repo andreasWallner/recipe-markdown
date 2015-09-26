@@ -104,6 +104,10 @@ class parseFileTest(unittest.TestCase):
         r = parseFile(StringIO(test_input['simple']))
         self.assertEqual(r, test_result['simple'])
 
+    def test_images(self):
+        r = parseFile(StringIO(test_input['images']))
+        self.assertEqual(r, test_result['images'])
+
     def test_multiphase(self):
         r = parseFile(StringIO(test_input['multiphase']))
         self.assertEqual(r, test_result['multiphase'])
@@ -124,6 +128,12 @@ class parseFileTest(unittest.TestCase):
 test_input = {
     'simple' : """
         ! title: the title
+        # 25g butter
+        * eat butter   """,
+    'images' : """
+        ! title: with images
+        !img: image one.jpg
+        !img: folder/image two.jpg
         # 25g butter
         * eat butter   """,
     'multiphase' : """
@@ -166,6 +176,31 @@ test_result = {
                         ]
                     )
                 ]
+            )
+        ],
+    'images' : [
+        Recipe(
+            'with images',
+            None,
+            None,
+            None,
+            None,
+            None,
+            [
+                Phase(
+                    [
+                        Ingredient('butter', '25', 'g'),
+                        ],
+                    [
+                        Step('eat butter'),
+                        ]
+                    )
+                ],
+            None,
+            [
+                'image one.jpg',
+                'folder/image two.jpg'
+            ]
             )
         ],
     'multiphase' : [

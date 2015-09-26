@@ -37,6 +37,16 @@
                         line-height:2em;
                         margin-bottom:0.15em;
                     }
+
+                    div.image img {
+                        width:100%;
+                    }
+
+                    @media print {
+                        div.image, div.image * {
+                            display: none !important;
+                        }
+                    }
                     
                     div.source {
                         font-size:0.8em;
@@ -114,6 +124,7 @@
         <div class="container">
           <div class="title"><xsl:value-of select="meta/title/text()" /></div>
           <div class="size"><xsl:value-of select="meta/size/text()" /></div>
+          <xsl:apply-templates select="meta/images" />
           <div class="description"><xsl:apply-templates select="meta/description"/></div>
           <table>
               <tr>
@@ -164,6 +175,10 @@
     
     <xsl:template match="instructions">
         <xsl:apply-templates />
+    </xsl:template>
+
+    <xsl:template match="meta/images/img">
+        <div class="image"><img src="{text()}" /></div>
     </xsl:template>
     
     <xsl:template match="phase">

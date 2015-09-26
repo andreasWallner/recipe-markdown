@@ -59,6 +59,8 @@ def parseMeta(line, recipe):
         kws = val.split(',')
         kws = [x.strip() for x in kws]
         recipe.keywords += kws
+    elif key == 'img':
+        recipe.images.append(val)
     else:
         raise Exception('invalid metadata key')
 
