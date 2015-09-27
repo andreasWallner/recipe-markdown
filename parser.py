@@ -82,7 +82,7 @@ def preprocessLines(stream):
             else:
                 lineType = Line.Plain
 
-        if lineType != None:
+        if lineType != None and lineType != Line.Comment:
             if currentLine:
                 yield currentLine
             currentLine = Line(lineType, lineNo, contents)
@@ -218,7 +218,7 @@ def parseFile(stream):
                 meta = False # to allow progress images at the beginning of the recipe
                 if phase:
                     phase = None
-            elif line.lineType != Line.Comment:
+            else:
                 raise Exception('invalid line type')
 
     except Exception as e:
