@@ -96,7 +96,7 @@ class parseMetaTest(unittest.TestCase):
         m = parseMeta(key, value, r)
         key, value = splitCommand('desc: second block')
         m = parseMeta(key, value, r)
-        self.assertEqual(r, Recipe(None, None, None, None, None, 'first block second block'))
+        self.assertEqual(r, Recipe(None, None, None, None, None, ['first block', 'second block']))
 
     def test_keyword(self):
         r = Recipe()

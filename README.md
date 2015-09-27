@@ -80,6 +80,7 @@ As an example, a simple recipe for a quiche lorraine:
     !author: uhu01
     !source: 
     !img: very_nice_image.png
+
     This would be the description for this very nice recipe, which is actually
     legit and can be cooked like this.
     

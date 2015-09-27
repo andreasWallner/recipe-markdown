@@ -51,8 +51,9 @@
                     div.source {
                         font-size:0.8em;
                     }
-                    
-                    div.description {
+
+                    div.description p {
+                        margin-top: 0px;
                         margin-bottom:0.3em;
                     }
                     
@@ -198,6 +199,10 @@
 
     <xsl:template match="meta/images/img">
         <div class="image"><img src="{text()}" /></div>
+    </xsl:template>
+
+    <xsl:template match="meta/description/p">
+        <p><xsl:apply-templates /></p>
     </xsl:template>
     
     <xsl:template match="phase">

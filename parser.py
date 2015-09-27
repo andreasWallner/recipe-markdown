@@ -130,11 +130,10 @@ def parseMeta(key, val, recipe):
     elif key == 'author':
         recipe.author = val
     elif key == 'desc':
-        if recipe.description == None:
-            recipe.description = val
+        if recipe.description is None:
+            recipe.description = [val]
         else:
-            #TODO: use a list with a string for each paragraph and extend the XML format
-            recipe.description = recipe.description.strip() + ' ' + val
+            recipe.description.append(val)
     elif key == 'keywords':
         kws = val.split(',')
         kws = [x.strip() for x in kws]

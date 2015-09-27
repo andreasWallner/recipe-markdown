@@ -159,7 +159,10 @@ class Recipe(object):
         self.source = source
         self.author = author
         self.phases = phases
-        self.description = description
+        if isinstance(description, str):
+            self.description = [description]
+        else:
+            self.description = description
         self.keywords = keywords
         self.images = images
 
@@ -179,7 +182,9 @@ class Recipe(object):
         if self.author is not None:
             etree.SubElement(m, 'author').text = self.author
         if self.description is not None:
-            etree.SubElement(m, 'description').text = self.description
+            desc = etree.SubElement(m, 'description')
+            for p in self.description:
+                etree.SubElement(desc, 'p').text = p
         if self.keywords:
             kwe = etree.SubElement(m, 'keywords')
             for kw in self.keywords:

@@ -146,7 +146,7 @@ class RecipeTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
         self.assertEqual(r.lang, 'de')
         self.assertEqual(r.source, 'source')
         self.assertEqual(r.author, 'author')
-        self.assertEqual(r.description, 'description')
+        self.assertEqual(r.description, ['description'])
         self.assertEqual(r.phases, [])
 
         p = Phase()
@@ -169,7 +169,7 @@ class RecipeTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     
     def test_repr(self):
         r = Recipe('title', 'size', 'de', 'source', 'author', 'description')
-        self.assertEqual(repr(r), "Recipe('title', 'size', 'de', 'source', 'author', 'description', [], [])")
+        self.assertEqual(repr(r), "Recipe('title', 'size', 'de', 'source', 'author', ['description'], [], [])")
 
     def test_compare(self):
         i = Ingredient('foo', None, None)
@@ -212,7 +212,9 @@ serialization = {
                        <lang>de</lang>
                        <source>source</source>
                        <author>author</author>
-                       <description>description</description>
+                       <description>
+                         <p>description</p>
+                       </description>
                        <keywords>
                          <keyword>k1</keyword>
                          <keyword>k2</keyword>
