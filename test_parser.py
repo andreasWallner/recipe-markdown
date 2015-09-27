@@ -153,27 +153,27 @@ class parseFileTest(unittest.TestCase):
 test_input = {
     'simple' : """
         ! title: the title
-        # 25g butter
-        * eat butter   """,
+        * 25g butter
+        - eat butter   """,
     'images' : """
         ! title: with images
         !img: image one.jpg
         !img: folder/image two.jpg
-        # 25g butter
-        * eat butter   """,
+        * 25g butter
+        - eat butter   """,
     'multiphase' : """
         ! title: the title
-        # 25g butter
-        * eat butter
+        * 25g butter
+        - eat butter
         + lie down a bit
-        # 100g meat
-        * eat meat
+        * 100g meat
+        - eat meat
         + never try this
-        * this""",
+        - this""",
     'multi_recipe' : """
         ! title: rec 1
         ! desc: simple description
-        # something
+        * something
         !title: rec 2
 
         a not so simple description

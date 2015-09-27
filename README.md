@@ -57,14 +57,14 @@ Currently for images to be displayed they have to be placed in the same folder t
 
 Then the recipe itself follows.
 
-Lines with ingredients are started with a '#'. After the hash, one can either
+Lines with ingredients are started with a '*'. After the star, one can either
 write the amount, unit and ingredient (e.g. 4tsp sugar) name, amount and name
 (e.g. 4 eggs), or just the ingredient if an amount is not neccesary (e.g.
 salt). The unit has to follow the amount directly, without whitespace
 in between. In cases when this is not sufficient, squared brackets around the
 unit can be used to separate the components in an explicit way (e.g. 1 [heaped tbsp.] sugar).
 
-Steps are started with a '\*', followed by the instruction.
+Steps are started with a '-', followed by the instruction.
 
 WaitPhase blocks start with a '+'.
 
@@ -81,22 +81,22 @@ As an example, a simple recipe for a quiche lorraine:
     This would be the description for this very nice recipe, which is actually
     legit and can be cooked like this.
     
-    # 200g speck
-    # 3pcs onion
-    * cut speck into cubes, onion into rings
-    * brown both together and let cool
+    * 200g speck
+    * 3pcs onion
+    - cut speck into cubes, onion into rings
+    - brown both together and let cool
     
-    # 3pcs egg
-    # 250ml heavy cream
-    # 125g Gruyère
-    * whisk egg and cream together
-    * grate Gruère, add to cream
-    * add speck mixture to cream
+    * 3pcs egg
+    * 250ml heavy cream
+    * 125g Gruyère
+    - whisk egg and cream together
+    - grate Gruère, add to cream
+    - add speck mixture to cream
     
-    # shortcrust pastry
-    * line dish with pastry
-    * fill pastry with the mixture
-    * bake in the preheated oven at 180°C, for 30 to 35 minutes
+    * shortcrust pastry
+    - line dish with pastry
+    - fill pastry with the mixture
+    - bake in the preheated oven at 180°C, for 30 to 35 minutes
 
 Installation
 ------------

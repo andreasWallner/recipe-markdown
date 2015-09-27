@@ -25,10 +25,10 @@ class Line:
     startCharacters = (
         ("'", Comment),
         ('!', Command),
-        ('=', Part),
-        ('#', Ingredient),
-        ('**', Note), # notes have to be parsed before instructions!
-        ('*', Step),
+        ('#', Part),
+        ('*', Ingredient),
+        ('--', Note), # notes have to be parsed before steps!
+        ('-', Step),
         ('+', WaitPhase),
     )
 
