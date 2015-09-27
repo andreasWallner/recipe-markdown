@@ -87,6 +87,12 @@
                         padding-bottom:0.3em;
                     }
 
+                    td.part {
+                        font-weight: bold;
+                        padding-top:0.3em;
+                        padding-bottom:0.3em;
+                    }
+
                     /* stretch the steps column to container width */
                     th:last-child, td:last-child {
                         width:100%;
@@ -206,6 +212,9 @@
 
     <xsl:template match="waitphase">
         <tr><td colspan="3" class="waitphase"><xsl:value-of select="text()" /></td></tr>
+    </xsl:template>
+    <xsl:template match="part">
+        <tr><td colspan="3" class="part"><xsl:value-of select="text()" /></td></tr>
     </xsl:template>
 </xsl:stylesheet>
 

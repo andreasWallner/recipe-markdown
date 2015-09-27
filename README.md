@@ -35,7 +35,7 @@ The metadata block is located at the beginning of the recipe block, ingredients
 and steps are mixed because of the intended output format. Ingredients for a
 specific block come first, then the steps to perform with the mentioned
 ingredients. Wait phases are steps in the recipe that primarily contain of
-waiting.
+waiting. Furthermore, the recipe can be separated into different parts.
 
 Currently metadata may contain
 - title / name
@@ -66,7 +66,7 @@ unit can be used to separate the components in an explicit way (e.g. 1 [heaped t
 
 Steps are started with a '-', followed by the instruction.
 
-WaitPhase blocks start with a '+'.
+WaitPhase blocks start with a '+' and a '#' is used to start a new part.
 
 Example
 -------

@@ -177,6 +177,7 @@ test_input = {
         + lie down a bit
         * 100g meat
         - eat meat
+        # test part
         + never try this
         - this""",
     'multi_recipe' : """
@@ -270,6 +271,7 @@ test_result = {
                         Step('eat meat')
                         ]
                     ),
+                Part('test part'),
                 WaitPhase('never try this'),
                 Phase(
                     None,

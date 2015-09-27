@@ -74,6 +74,26 @@ class WaitPhase(object):
             return NotImplemented
         return self.text != other.text
 
+class Part(object):
+    def __init__(self, text = None):
+        self.text = text
+
+    def serialize(self, element):
+        etree.SubElement(element, 'part').text = self.text
+
+    def __repr__(self):
+        return 'Part({!r})'.format(self.text)
+
+    def __eq__(self, other):
+        if not isinstance(other, Part):
+            return NotImplemented
+        return self.text == other.text
+
+    def __ne__(self, other):
+        if not isinstance(other, Part):
+            return NotImplemented
+        return self.text != other.text
+
 class Phase(object):
     def __init__(self, ingredients = None, steps = None):
         if ingredients is None:

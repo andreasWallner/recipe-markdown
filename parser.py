@@ -173,7 +173,12 @@ def parseFile(stream):
                 parseMeta('desc', line.contents, recipe)
 
             elif line.lineType == Line.Part:
-                raise Exception('parts are not implemented yet')
+                if not recipe:
+                    raise Exception('part occurred outside of recipe')
+                meta = False
+                phase = None
+                part = Part(line.contents)
+                recipe.phases.append(part)
 
             elif line.lineType == Line.Ingredient:
                 if not recipe:
