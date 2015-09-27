@@ -199,7 +199,13 @@ def parseFile(stream):
                 phase.steps.append(Step(line.contents))
 
             elif line.lineType == Line.Note:
-                raise Exception('notes are not implemented yet')
+                if not recipe:
+                    raise Exception('note occurred outside of recipe')
+                meta = False
+                if not phase:
+                    phase = Phase()
+                    recipe.phases.append(phase)
+                phase.steps.append(Note(line.contents))
 
             elif line.lineType == Line.WaitPhase:
                 if not recipe:

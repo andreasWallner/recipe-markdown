@@ -54,6 +54,26 @@ class Step(object):
             return NotImplemented
         return self.text != other.text
 
+class Note(object):
+    def __init__(self, text):
+        self.text = text
+
+    def serialize(self, element):
+        e = etree.SubElement(element, 'note').text = self.text
+
+    def __repr__(self):
+        return 'Note({!r})'.format(self.text)
+
+    def __eq__(self, other):
+        if not isinstance(other, Note):
+            return NotImplemented
+        return self.text == other.text
+
+    def __ne__(self, other):
+        if not isinstance(other, Note):
+            return NotImplemented
+        return self.text != other.text
+
 class WaitPhase(object):
     def __init__(self, text = None):
         self.text = text

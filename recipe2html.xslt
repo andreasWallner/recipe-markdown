@@ -118,6 +118,19 @@
                         margin-right:0.4em;
                         margin-top:0.2em;
                     }
+                    .noteMarker {
+                        width: 1.2em;
+                        height: 1.2em;
+                        padding: 1px;
+                        text-align: center;
+                        vertical-align:middle;
+
+                        font: 0.7em Arial, sans-serif;
+                        line-height:1.2em;
+                        display:inline-block;
+                        margin-right:0.4em;
+                        margin-top:0.2em;
+                    }
                 </style>
             </head>
             <body>
@@ -193,12 +206,17 @@
             <td class="amount"><xsl:for-each select="ingredient"><xsl:value-of select="amount/text()" /><xsl:text> </xsl:text><xsl:value-of select="unit/text()" /><br /></xsl:for-each></td>
             <td class="step">
                 <div style="display:container;margin:0;padding:0">
-                    <xsl:for-each select="step">
+                    <xsl:for-each select="step | note">
                         <div style="display:table-row">
                              <div style="display:table-cell;vertical-align:top">
-                                 <div class="numberCircle" style="float:left">
-                                    <xsl:value-of select="count(ancestor::recipe/descendant::step[count(.|current()/preceding::step)=count(current()/preceding::step)])+1" />
-                                 </div>
+                                <xsl:choose>
+                                    <xsl:when test="local-name(.) = 'step'">
+                                        <div class="numberCircle" style="float:left"><xsl:value-of select="count(ancestor::recipe/descendant::step[count(.|current()/preceding::step)=count(current()/preceding::step)])+1" /> </div>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <div class="noteMarker" style="float:left">➤</div>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                              </div>
                              <div style="display:table-cell">
                                 <xsl:value-of select="text()" />

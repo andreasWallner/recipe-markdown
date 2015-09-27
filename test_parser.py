@@ -174,6 +174,7 @@ test_input = {
         ! title: the title
         * 25g butter
         - eat butter
+        -- don't choke
         + lie down a bit
         * 100g meat
         - eat meat
@@ -259,7 +260,8 @@ test_result = {
                         Ingredient('butter', '25', 'g'),
                         ],
                     [
-                        Step('eat butter')
+                        Step('eat butter'),
+                        Note('don\'t choke')
                         ]
                     ),
                 WaitPhase('lie down a bit'),
