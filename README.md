@@ -61,7 +61,8 @@ Lines with ingredients are started with a '#'. After the hash, one can either
 write the amount, unit and ingredient (e.g. 4tsp sugar) name, amount and name
 (e.g. 4 eggs), or just the ingredient if an amount is not neccesary (e.g.
 salt). The unit has to follow the amount directly, without whitespace
-inbetween.
+in between. In cases when this is not sufficient, squared brackets around the
+unit can be used to separate the components in an explicit way (e.g. 1 [heaped tbsp.] sugar).
 
 Steps are started with a '\*', followed by the instruction.
 

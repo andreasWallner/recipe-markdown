@@ -90,17 +90,24 @@ def preprocessLines(stream):
         yield currentLine
 
 def parseIngredient(line):
-    r = r'^\s*([0-9/\.]+(?:\s+[0-9/]+)?)([a-zA-Z]+)?\s+(.*)'
-    result = re.match( r, line)
+    r = r'^(.+)\[(.*)\](.+)'
+    result = re.match(r, line)
+
+    if result is None:
+        r = r'^\s*([0-9/\.]+(?:\s+[0-9/]+)?)([a-zA-Z]+)?\s+(.*)'
+        result = re.match( r, line)
 
     if result is None:
         return Ingredient(line, None, None)
 
-    return Ingredient(
-        result.groups()[2].rstrip(),
-        result.groups()[0],
-        result.groups()[1],
-        )
+    name = result.group(3).strip()
+    amount = result.group(1).strip()
+    unit = result.group(2)
+    if isinstance(unit, str):
+        unit = unit.strip()
+    if not unit:
+        unit = None
+    return Ingredient(name, amount, unit)
 
 def splitCommand(line):
     r = r'^\s*([a-zA-Z]+)\s*:\s*(.*)'

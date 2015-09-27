@@ -31,6 +31,22 @@ class parseIngredientTest(unittest.TestCase):
         i = parseIngredient('diced onion')
         self.assertEqual(i, Ingredient('diced onion', None, None))
 
+    def test_explicit(self):
+        i = parseIngredient('about 25 [g] butter')
+        self.assertEqual(i, Ingredient('butter', 'about 25', 'g'))
+
+    def test_explicit_nospaces(self):
+        i = parseIngredient('about 25[g]butter')
+        self.assertEqual(i, Ingredient('butter', 'about 25', 'g'))
+
+    def test_explicit_long_unit(self):
+        i = parseIngredient('1 [ heaped tbsp. ] sugar')
+        self.assertEqual(i, Ingredient('sugar', '1', 'heaped tbsp.'))
+
+    def test_explicit_nounit(self):
+        i = parseIngredient('as needed [] salt')
+        self.assertEqual(i, Ingredient('salt', 'as needed', None))
+
 class parseMetaTest(unittest.TestCase):
     def test_title(self):
         r = Recipe()
