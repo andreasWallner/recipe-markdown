@@ -2,6 +2,37 @@ import unittest
 from io import StringIO
 from parser import *
 
+class LineTest(unittest.TestCase):
+    def test_init(self):
+        l = Line(Line.Step, 23, 'mix')
+        self.assertEqual(l.lineType, Line.Step)
+        self.assertEqual(l.lineNo, 23)
+        self.assertEqual(l.contents, 'mix')
+
+    def test_append(self):
+        l = Line(Line.Step, 23, 'mix')
+        l.append('and fry')
+        self.assertEqual(l.contents, 'mix and fry')
+
+    def test_repr(self):
+        l = Line(Line.Step, 23, 'mix')
+        self.assertEqual(repr(l), "Line(<class 'parser.Line.Step'>, 23, 'mix')")
+
+    def test_compare(self):
+        self.assertEqual(Line(Line.Step, 23, 'mix'), Line(Line.Step, 23, 'mix'))
+        self.assertNotEqual(Line(Line.Step, 23, 'mix'), Line(Line.Ingredient, 23, 'mix'))
+        self.assertNotEqual(Line(Line.Step, 23, 'mix'), Line(Line.Step, 42, 'mix'))
+        self.assertNotEqual(Line(Line.Step, 23, 'mix'), Line(Line.Step, 23, 'fry'))
+
+class preprocesssLinesTest(unittest.TestCase):
+    def test_linetypes(self):
+        lines = list(preprocessLines(StringIO(preprocessLines_input['linetypes'])))
+        self.assertEqual(lines, preprocessLines_result['linetypes'])
+
+    def test_wordwrap(self):
+        lines = list(preprocessLines(StringIO(preprocessLines_input['wordwrap'])))
+        self.assertEqual(lines, preprocessLines_result['wordwrap'])
+
 class parseIngredientTest(unittest.TestCase):
     def test_normal(self):
         i = parseIngredient('25g butter')
@@ -158,6 +189,53 @@ class parseFileTest(unittest.TestCase):
         self.assertEqual(context.exception.line_nr, 5)
         self.assertIsNotNone(context.exception.__cause__)
         self.assertEqual(context.exception.__cause__.args[0], 'plain lines are only allowed for description at the beginning of the recipe')
+
+
+preprocessLines_input = {
+    'linetypes': """
+        !title: linetype test\t
+
+        plain
+        ' comment
+        # part
+        * ingredient
+        - step
+        -- note
+        + wait phase""",
+    'wordwrap': """
+        * this is a wordwrap
+        test, which is
+        spanning over 3 lines
+        * next ingredient
+
+        * and another multiline test
+        followed by an invalid plain line
+
+        this is the invalid line"""
+    }
+
+preprocessLines_result = {
+    'linetypes': [
+        Line(Line.Empty, 1, ''),
+        Line(Line.Command, 2, 'title: linetype test'),
+        Line(Line.Empty, 3, ''),
+        Line(Line.Plain, 4, 'plain'), # comment is discarded by preprocessLines
+        Line(Line.Part, 6, 'part'),
+        Line(Line.Ingredient, 7, 'ingredient'),
+        Line(Line.Step, 8, 'step'),
+        Line(Line.Note, 9, 'note'),
+        Line(Line.WaitPhase, 10, 'wait phase'),
+        ],
+    'wordwrap': [
+        Line(Line.Empty, 1, ''),
+        Line(Line.Ingredient, 2, 'this is a wordwrap test, which is spanning over 3 lines'),
+        Line(Line.Ingredient, 5, 'next ingredient'),
+        Line(Line.Empty, 6, ''),
+        Line(Line.Ingredient, 7, 'and another multiline test followed by an invalid plain line'),
+        Line(Line.Empty, 9, ''),
+        Line(Line.Plain, 10, 'this is the invalid line'),
+        ]
+    }
 
 test_input = {
     'simple' : """

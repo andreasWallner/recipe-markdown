@@ -57,6 +57,17 @@ class Line:
         else:
             self._contents.append(contents)
 
+    def __eq__(self, other):
+        if not isinstance(other, Line):
+            return NotImplemented
+
+        return (self.lineType == other.lineType
+            and self.lineNo == other.lineNo
+            and self.contents == other.contents)
+
+    def __ne__(self, other):
+        return not self == other
+
 def preprocessLines(stream):
     """Generator that joins word wrapped lines back together and parses the type of the line,
     e.g. ingredient or step. Yields instances of the Line class.
