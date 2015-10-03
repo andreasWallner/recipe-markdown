@@ -80,6 +80,26 @@ class StepTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
         self.assertRealEqual(Step('foo'), Step('foo'))
         self.assertRealNotEqual(Step('foo'), Step('bar'))
 
+class NoteTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
+    def test_init(self):
+        n = Note('text')
+        self.assertEqual(n.text, 'text')
+
+    def test_serialize(self):
+        n = Note('text')
+        e = etree.Element('root')
+        n.serialize(e)
+
+        self.assertXmlEqual(etree.tounicode(e), serialization['note'])
+
+    def test_repr(self):
+        n = Note('text')
+        self.assertEqual(repr(n),"Note('text')")
+
+    def test_compare(self):
+        self.assertRealEqual(Note('foo'), Note('foo'))
+        self.assertRealNotEqual(Note('foo'), Note('bar'))
+
 class WaitPhaseTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_init(self):
         h = WaitPhase('text')
@@ -99,6 +119,26 @@ class WaitPhaseTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_compare(self):
         self.assertRealEqual(WaitPhase('foo'), WaitPhase('foo'))
         self.assertRealNotEqual(WaitPhase('foo'), WaitPhase('bar'))
+
+class PartTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
+    def test_init(self):
+        p = Part('text')
+        self.assertEqual(p.text, 'text')
+
+    def test_serialize(self):
+        p = Part('text')
+        e = etree.Element('root')
+        p.serialize(e)
+
+        self.assertXmlEqual(etree.tounicode(e), serialization['part'])
+
+    def test_repr(self):
+        p = Part('text')
+        self.assertEqual(repr(p),"Part('text')")
+
+    def test_compare(self):
+        self.assertRealEqual(Part('foo'), Part('foo'))
+        self.assertRealNotEqual(Part('foo'), Part('bar'))
 
 class PhaseTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_init(self):
@@ -202,7 +242,9 @@ serialization = {
         'noamount' : '<root><ingredient><name>name</name></ingredient></root>',
     },
     'step' : '<root><step>text</step></root>',
+    'note' : '<root><note>text</note></root>',
     'waitphase' : '<root><waitphase>text</waitphase></root>',
+    'part' : '<root><part>text</part></root>',
     'phase': '<root><phase><ingredient>...</ingredient><step>step1</step><step>step2</step></phase></root>',
     'recipe': """<root>
                    <recipe>
