@@ -178,7 +178,7 @@ def parseFile(stream):
                     raise Exception('commands are not yet used (metadata must appear at the beginning of the recipe)')
 
             elif line.lineType == Line.Plain:
-                if len(recipe.phases):
+                if not recipe or len(recipe.phases):
                     raise Exception('plain lines are only allowed for description at the beginning of the recipe')
                 parseMeta('desc', line.contents, recipe)
 
