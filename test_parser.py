@@ -24,7 +24,7 @@ class LineTest(unittest.TestCase):
         self.assertNotEqual(Line(Line.Step, 23, 'mix'), Line(Line.Step, 42, 'mix'))
         self.assertNotEqual(Line(Line.Step, 23, 'mix'), Line(Line.Step, 23, 'fry'))
 
-class preprocesssLinesTest(unittest.TestCase):
+class preprocessLinesTest(unittest.TestCase):
     def test_linetypes(self):
         lines = list(preprocessLines(StringIO(preprocessLines_input['linetypes'])))
         self.assertEqual(lines, preprocessLines_result['linetypes'])
