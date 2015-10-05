@@ -42,20 +42,14 @@ class Line:
 
     @property
     def contents(self):
-        if isinstance(self._contents, str):
-            return self._contents
-        else:
-            return ' '.join(self._contents)
+        return ' '.join(self._contents)
 
     @contents.setter
     def contents(self, contents):
-        self._contents = contents
+        self._contents = [contents]
 
     def append(self, contents):
-        if isinstance(self._contents, str):
-            self._contents = [self._contents, contents]
-        else:
-            self._contents.append(contents)
+        self._contents.append(contents)
 
     def __eq__(self, other):
         if not isinstance(other, Line):
