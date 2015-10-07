@@ -1,0 +1,10 @@
+language: python
+python:
+  - "3.4"
+install:
+  - pip install lxml jinja2
+before_script:
+  - git config --global user.email travisci@email
+  - git config --global user.name travisci
+script: python -m unittest discover
+
