@@ -1,6 +1,8 @@
 Recipe Markdown
 ===============
 
+![Build Status](https://travis-ci.org/andreasWallner/recipe-markdown.svg?branch=master)
+
 We aim to create a bunch of tool for easy entry recipes using a language somewhat inspired by markdown.
 The files themselves are simple text files, which are parsed using python and transformed into
 other descriptions for display purposes.
