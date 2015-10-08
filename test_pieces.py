@@ -23,27 +23,6 @@ class IngredientTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
         with self.assertRaises(RecipeParseError) as context:
             i = Ingredient('name',None,'unit')
 
-    def test_serialize(self):
-        i = Ingredient('name', 'amount', 'unit')
-        e = etree.Element('root')
-        i.serialize(e)
-
-        self.assertXmlEqual(etree.tounicode(e), serialization['ingredient']['amount'])
-
-    def test_serialize_nounit(self):
-        i = Ingredient('name', 'amount', None)
-        e = etree.Element('root')
-        i.serialize(e)
-
-        self.assertXmlEqual(etree.tounicode(e), serialization['ingredient']['nounit'])
-
-    def test_serialize_noamount(self):
-        i = Ingredient('name', None, None)
-        e = etree.Element('root')
-        i.serialize(e)
-
-        self.assertXmlEqual(etree.tounicode(e), serialization['ingredient']['noamount'])
-
     def test_repr(self):
         i = Ingredient('name', 'amount', 'unit')
         self.assertEqual(repr(i), "Ingredient('name', 'amount', 'unit')")
@@ -65,13 +44,6 @@ class StepTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
         s = Step('text')
         self.assertEqual(s.text, 'text')
 
-    def test_serialize(self):
-        s = Step('text')
-        e = etree.Element('root')
-        s.serialize(e)
-
-        self.assertXmlEqual(etree.tounicode(e), serialization['step'])
-
     def test_repr(self):
         s = Step('text')
         self.assertEqual(repr(s),"Step('text')")
@@ -84,13 +56,6 @@ class NoteTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_init(self):
         n = Note('text')
         self.assertEqual(n.text, 'text')
-
-    def test_serialize(self):
-        n = Note('text')
-        e = etree.Element('root')
-        n.serialize(e)
-
-        self.assertXmlEqual(etree.tounicode(e), serialization['note'])
 
     def test_repr(self):
         n = Note('text')
@@ -105,13 +70,6 @@ class WaitPhaseTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
         h = WaitPhase('text')
         self.assertEqual(h.text, 'text')
 
-    def test_serialize(self):
-        h = WaitPhase('text')
-        e = etree.Element('root')
-        h.serialize(e)
-
-        self.assertXmlEqual(etree.tounicode(e), serialization['waitphase'])
-
     def test_repr(self):
         h = WaitPhase('text')
         self.assertEqual(repr(h),"WaitPhase('text')")
@@ -124,13 +82,6 @@ class PartTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_init(self):
         p = Part('text')
         self.assertEqual(p.text, 'text')
-
-    def test_serialize(self):
-        p = Part('text')
-        e = etree.Element('root')
-        p.serialize(e)
-
-        self.assertXmlEqual(etree.tounicode(e), serialization['part'])
 
     def test_repr(self):
         p = Part('text')
@@ -151,16 +102,6 @@ class PhaseTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
         p = Phase([i],[s])
         self.assertEqual(p.ingredients, [i])
         self.assertEqual(p.steps, [s])
-
-    def test_serialize(self):
-        i = Ingredient('name',None,None)
-        s1 = Step('step1')
-        s2 = Step('step2')
-        p = Phase([i],[s1,s2])
-        e = etree.Element('root')
-        p.serialize(e)
-
-        self.assertXmlEqual(etree.tounicode(e), serialization['phase'])
 
     def test_compare(self):
         i1 = Ingredient('name',None,None)
@@ -199,14 +140,6 @@ class RecipeTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
         self.assertEqual(r.description, None)
         self.assertEqual(r.phases, [p])
 
-    def test_serialize(self):
-        p = Phase()
-        r = Recipe('title', 'size', 'de', 'source', 'author', 'description', [p], ['k1', 'k2'], ['img1.jpg', 'img2.jpg'])
-        e = etree.Element('root')
-        r.serialize(e)
-
-        self.assertXmlEqual(etree.tounicode(e), serialization['recipe'])
-    
     def test_repr(self):
         r = Recipe('title', 'size', 'de', 'source', 'author', 'description')
         self.assertEqual(repr(r), "Recipe('title', 'size', 'de', 'source', 'author', ['description'], [], [])")
@@ -235,40 +168,3 @@ class RecipeTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
 if __name__ == '__main__':
     unittest.main()
 
-serialization = {
-    'ingredient' : {
-        'amount' : '<root><ingredient><name>name</name><amount>amount</amount><unit>unit</unit></ingredient></root>',
-        'nounit' : '<root><ingredient><name>name</name><amount>amount</amount></ingredient></root>',
-        'noamount' : '<root><ingredient><name>name</name></ingredient></root>',
-    },
-    'step' : '<root><step>text</step></root>',
-    'note' : '<root><note>text</note></root>',
-    'waitphase' : '<root><waitphase>text</waitphase></root>',
-    'part' : '<root><part>text</part></root>',
-    'phase': '<root><phase><ingredient>...</ingredient><step>step1</step><step>step2</step></phase></root>',
-    'recipe': """<root>
-                   <recipe>
-                     <meta>
-                       <title>title</title>
-                       <size>size</size>
-                       <lang>de</lang>
-                       <source>source</source>
-                       <author>author</author>
-                       <description>
-                         <p>description</p>
-                       </description>
-                       <keywords>
-                         <keyword>k1</keyword>
-                         <keyword>k2</keyword>
-                       </keywords>
-                       <images>
-                         <img>img1.jpg</img>
-                        <img>img2.jpg</img>
-                       </images>
-                     </meta>
-                     <instructions>
-                       <phase />
-                     </instructions>
-                   </recipe>
-                 </root>""",
-}

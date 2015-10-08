@@ -5,7 +5,7 @@ import os.path
 from lxml import etree
 
 from parser import parseFile
-from serializer import serializeRecipes
+from serializer.xml import dump
 
 def process(obj_id, target, xslt = None):
   """ get file from git, process, write to target folder
@@ -18,11 +18,7 @@ def process(obj_id, target, xslt = None):
   """
   stream = io.TextIOWrapper(git.blob_file_handle(obj_id), encoding='utf8')
   r = parseFile(stream)
-  rec = serializeRecipes(r)
-  if xslt is not None:
-    rec.addprevious(etree.ProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' + xslt + '"'))
-  et = etree.ElementTree(rec)
-  et.write(target, xml_declaration=True, pretty_print=True, encoding='UTF-8')
+  dump(target, r, xslt)
 
 def xml_filename(name, path):
   if not name.endswith('.rmd'):

@@ -5,10 +5,7 @@ import io
 import sys
 import git
 import index
-from lxml import etree
 
-from parser import parseFile
-from serializer import serializeRecipes
 import common
 
 # hook is being executed inside the repository, so add the hooks
