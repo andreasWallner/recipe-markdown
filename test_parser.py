@@ -54,6 +54,14 @@ class parseIngredientTest(unittest.TestCase):
         i = parseIngredient('0.5g butter')
         self.assertEqual(i, Ingredient('butter', '0.5', 'g'))
 
+    def test_comma(self):
+        i = parseIngredient('0,5g Butter')
+        self.assertEqual(i, Ingredient('Butter', '0,5', 'g'))
+
+    def test_range(self):
+        i = parseIngredient('1-2g butter')
+        self.assertEqual(i, Ingredient('butter', '1-2', 'g'))
+
     def test_nounit(self):
         i = parseIngredient('4 eggs')
         self.assertEqual(i, Ingredient('eggs', '4', None))
