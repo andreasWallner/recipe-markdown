@@ -42,16 +42,18 @@ def main():
         if file.split('.')[-1] != settings.EXTENSION:
             continue
 
+        filename = common.xml_filename(file, settings.TARGET)
+
         if action == 'D':
             print('D {}'.format(file))
             try:
-                os.remove(common.xml_filename(file))
+                os.remove(filename)
             except FileNotFoundError:
                 print('file to be removed, but could not be found'.format(file))
 
         elif action == 'M' or action == 'A' or action == 'C':
             print('C {}'.format(file))
-            common.process(obj_id, common.xml_filename(file))
+            common.process(obj_id, filename)
 
         else:
             print('unknown git status {} of <{}>'.format(action, file), file=sys.stderr)

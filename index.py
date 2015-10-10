@@ -1,7 +1,6 @@
 import os
 import utils
 import json
-from os import path
 from lxml import etree
 from operator import itemgetter
 try:
@@ -13,7 +12,8 @@ except ImportError:
 
 def _extract_data(path, f):
     recipes = []
-    xml = etree.parse(path.join([path, f]))
+    abspath = os.path.join(path, f)
+    xml = etree.parse(abspath)
     for r in xml.xpath('//recipe'):
         meta = {'filename' : f}
         for m in r.xpath('meta/*'):
@@ -95,5 +95,3 @@ def update_index_simple(path):
         f.write(b'<!DOCTYPE HTML>')
         etree.ElementTree(root).write(f, encoding='utf-8')
 
-
-    

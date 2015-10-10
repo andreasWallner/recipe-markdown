@@ -6,5 +6,5 @@ install:
 before_script:
   - git config --global user.email travisci@email
   - git config --global user.name travisci
-script: python -m unittest discover
+script: python -m unittest discover -v
 

@@ -2,11 +2,9 @@ import unittest
 import tempfile
 import utils
 import subprocess
-import os, io
+import os
+import io
 import git
-import inspect
-
-_current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
 def _run_command(command, timeout=2000):
     environment = os.environ.copy()
@@ -18,10 +16,11 @@ def _run_command(command, timeout=2000):
         )
     output = proc.communicate()
 
+    out = output[0].decode('utf8')
     if proc.returncode != 0:
-        raise Exception('command failed {!r}'.format(command), output)
+        raise Exception('command failed {!r}'.format(command), out)
 
-    return [ l.rstrip('\n') for l in output[0].decode('utf8').split('\n') ]
+    return [ l.rstrip('\n') for l in out.split('\n') ]
 
 def _write_file(filename, content):
     with open(filename, 'w') as f:
@@ -29,9 +28,10 @@ def _write_file(filename, content):
 
 class tests(unittest.TestCase, utils.TypeCheckMixin):
     def _setup_target_git(self, target, outdir):
+        hook_path = os.path.abspath('./update-hook.py')
         with utils.ChangeDir(target):
             _run_command(['git', 'init', '--bare'])
-            os.symlink(_current_dir + '/update-hook.py', 'hooks/update')
+            os.symlink(hook_path, 'hooks/update')
             _write_file('hooks/settings.py', settings.format(outdir))
 
     def _setup_source_git(self, source, target):
@@ -40,14 +40,19 @@ class tests(unittest.TestCase, utils.TypeCheckMixin):
             _run_command(['git', 'remote', 'add', 'target', target])
             _run_command(['git', 'config', 'push.default', 'simple'])
     
-    def test_all(self):
-        with tempfile.TemporaryDirectory() as source:
-            with tempfile.TemporaryDirectory() as target:
-                with tempfile.TemporaryDirectory() as outdir:
-                    self._setup_target_git(target, outdir)
-                    self._setup_source_git(source, target)
-                
-                    self._real_test_all(source, target, outdir)
+    def test_typical_usecase(self):
+        with tempfile.TemporaryDirectory() as container:
+            source = os.path.join(container, 'source')
+            target = os.path.join(container, 'target')
+            outdir = os.path.join(container, 'outdir')
+
+            os.mkdir(source)
+            os.mkdir(target)
+            os.mkdir(outdir)
+
+            self._setup_target_git(target, outdir)
+            self._setup_source_git(source, target)
+            self._real_test_all(source, target, outdir)
 
     def _real_test_all(self, source, target, outdir):
         # for now we'll just be happy that the files are there
@@ -85,8 +90,8 @@ class tests(unittest.TestCase, utils.TypeCheckMixin):
             self.assertFalse(os.path.isfile('add.xml'), 'Xml has not been deleted')
             self.assertTrue(os.path.isfile('index.html'), 'Index has not been generated')
 
-
 settings = """
+EXTENSION='rmd'
 TARGET="{}/"
 XSLT="recipe2html.xslt"
 UMASK=0o022
@@ -105,4 +110,3 @@ change_text = """
 # Ingredient
 * Step
 """
-
