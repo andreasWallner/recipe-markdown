@@ -31,7 +31,7 @@ def main():
             continue
 
         if action == 'M' or action == 'A' or action == 'C':
-            r = common.process(obj_id,'/dev/null')
+            r = common.process(obj_id, '/dev/null', settings.XSLT)
 
     # do a real run
     for c in cf:
@@ -53,7 +53,7 @@ def main():
 
         elif action == 'M' or action == 'A' or action == 'C':
             print('C {}'.format(file))
-            common.process(obj_id, filename)
+            common.process(obj_id, filename, settings.XSLT)
 
         else:
             print('unknown git status {} of <{}>'.format(action, file), file=sys.stderr)

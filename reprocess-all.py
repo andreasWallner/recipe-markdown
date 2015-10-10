@@ -38,7 +38,7 @@ def reprocess(target, source, umask = None):
       if file.split('.')[-1] != 'rmd':
         continue
 
-      r = common.process(obj_id, '/dev/null')
+      r = common.process(obj_id, '/dev/null', settings.XSLT)
 
     # do a real run
     for f in files:
@@ -49,7 +49,7 @@ def reprocess(target, source, umask = None):
         continue
 
       print('P {}'.format(file))
-      common.process(obj_id, common.xml_filename(file, target))
+      common.process(obj_id, common.xml_filename(file, target), settings.XSLT)
 
     print('finished processing of files')
 
