@@ -99,7 +99,7 @@ def parseIngredient(line):
     result = re.match(r, line)
 
     if result is None:
-        r = r'^\s*([0-9/\.]+(?:\s+[0-9/]+)?)([a-zA-Z]+)?\s+(.*)'
+        r = r'^\s*([0-9/\.,-]+(?:\s+[0-9/]+)?)([a-zA-Z]+)?\s+(.*)'
         result = re.match( r, line)
 
     if result is None:
