@@ -22,6 +22,8 @@ except ImportError:
 
 def reprocess(target, source, umask = None):
   target = os.path.abspath(target)
+  xslt = settings.XSLT if settingsAvailable else None
+
   with utils.ChangeDir(source):
     if umask is not None:
       os.umask(umask)
@@ -38,7 +40,7 @@ def reprocess(target, source, umask = None):
       if file.split('.')[-1] != 'rmd':
         continue
 
-      r = common.process(obj_id, '/dev/null', settings.XSLT)
+      r = common.process(obj_id, '/dev/null', xslt)
 
     # do a real run
     for f in files:
@@ -49,7 +51,7 @@ def reprocess(target, source, umask = None):
         continue
 
       print('P {}'.format(file))
-      common.process(obj_id, common.xml_filename(file, target), settings.XSLT)
+      common.process(obj_id, common.xml_filename(file, target), xslt)
 
     print('finished processing of files')
 
