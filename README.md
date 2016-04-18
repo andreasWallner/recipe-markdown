@@ -27,7 +27,7 @@ Markdown format
 ---------------
 
 The format is line-based, every 'information' has to be on a seperate line.
-The markdown format contains three types of information:
+The markdown format contains five types of information:
 - metadata
 - ingredients
 - steps
@@ -41,19 +41,17 @@ ingredients. A note is similar to a step, but contains additional advice and is 
 Wait phases are steps in the recipe that primarily contain of
 waiting. Furthermore, the recipe can be separated into different parts.
 
-Currently metadata may contain
-- title / name
-- size (how many people can you feed)
-- author (writer of the recipe)
-- source (original source of the recipe)
-- images
-
-For tag names have a look at the example below.
+Currently metadata may contain the following tags:
+- !title (name of the recipe)
+- !size (how many people can you feed)
+- !author (writer of the recipe)
+- !source (original source of the recipe)
+- !img (on-disk image file; one image per !img tag)
 
 Metadata is written with a leading '!', followed by the type of metadata, a
 colon and the value.  After the first metadata line, all lines that can not be
 interpreted as anything else will also be considered metadata.
-A '!' also has to be used to mark the begin of a new recipe (since the metadata
+A '!' also has to be used to mark the beginning of a new recipe (since the metadata
 has to be at the beginning of the recipe, the first metadata line is sufficient
 for this).
 
