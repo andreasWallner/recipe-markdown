@@ -109,10 +109,10 @@ If you manage your repositories with gitolite replace the 4th step with the
 actions appropriate for your version of gitolite (see gitolite docs).
 
 - checkout the recipe-markdown code (e.g. to /opt)
-- if necessary, make update-trigger.py executable
+- if necessary, make update-hook.py executable
 - create a new repository to hold your recipes
 - in this repositories hooks folder, create a link named "update" that links to
-  update-trigger.py
+  update-hook.py
 - copy settings\_template.py to the hooks folder and rename it to settings.py
 - edit settings.py to suite your needs
 - use recipe-markdown by pushing recipes into the repository
