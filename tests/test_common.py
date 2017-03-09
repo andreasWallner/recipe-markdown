@@ -1,9 +1,9 @@
-import unittest
 import tempfile
-import utils
-import os
+import unittest
 from os import path
-from common import *
+from recipemd.common import *
+from recipemd import utils
+
 
 class tests(unittest.TestCase):
     def test_xml_filename(self):

@@ -2,7 +2,6 @@ import warnings
 import os
 from doctest import Example
 from lxml.doctestcompare import LXMLOutputChecker
-
 from functools import wraps
 
 class XmlTestMixin(object):

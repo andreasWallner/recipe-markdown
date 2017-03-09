@@ -1,8 +1,9 @@
 import os
-import utils
 import json
 from lxml import etree
 from operator import itemgetter
+from recipemd import utils
+
 try:
     from jinja2 import Environment, FileSystemLoader
     update_index = lambda p: update_index_jinja(p)
@@ -36,7 +37,7 @@ def _collect_data(path):
 def update_index_jinja(path):
     recs = _collect_data(path)
 
-    env = Environment(loader = FileSystemLoader(os.path.dirname(os.path.realpath(__file__))))
+    env = Environment(loader = FileSystemLoader(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'templates')))
     template = env.get_template('index.jinja')
 
     # specify encoding explicitly, since the shell that git spawns us in does

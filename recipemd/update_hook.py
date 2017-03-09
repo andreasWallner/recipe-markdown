@@ -1,12 +1,6 @@
-#!/usr/bin/env python3
-
 import os
-import io
 import sys
-import git
-import index
-
-import common
+from recipemd import git, index, common
 
 # hook is being executed inside the repository, so add the hooks
 # directory to the path so that we can load our configuration from there
@@ -19,7 +13,7 @@ def main():
 
     print('starting processing of commit')
 
-    cf = git.changed_files(old,new)
+    cf = git.changed_files(old, new)
 
     # do a dry run to catch errors
     for f in cf:
@@ -62,6 +56,3 @@ def main():
     index.update_json(settings.TARGET)
 
     print('finished processing of commits')
-
-if __name__ == '__main__':
-    main()

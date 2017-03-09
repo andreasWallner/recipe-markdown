@@ -1,5 +1,6 @@
 import json
-import pieces
+from recipemd import pieces
+
 
 def dump(f, content):
     f.write(json.dumps(content, indent=2, cls=RecipeEncoder).encode())

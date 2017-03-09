@@ -1,5 +1,5 @@
-from errors import *
-from lxml import etree
+from recipemd.errors import *
+
 
 class Ingredient(object):
     def __init__(self, name, amount, unit):

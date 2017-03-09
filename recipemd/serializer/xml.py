@@ -1,5 +1,6 @@
 from lxml import etree
-import pieces
+from recipemd import pieces
+
 
 def dump(f, content, xslt = None):
     root = etree.Element('root')

@@ -1,11 +1,9 @@
-#!/usr/bin/python
-
-import sys
 import argparse
-import serializer.json as js
-import serializer.xml as xs
+import sys
+import recipemd.serializer.json as js
+import recipemd.serializer.xml as xs
+from recipemd.parser import parseFile
 
-from parser import parseFile
 
 class BarAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
@@ -29,6 +27,3 @@ def main():
         xs.dump(args.o, recipes, args.xslt)
     else:
         js.dump(args.o, recipes)
-
-if __name__ == '__main__':
-    main()

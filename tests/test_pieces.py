@@ -1,8 +1,8 @@
 import unittest
-from errors import *
-from pieces import *
-from lxml import etree
-from utils import XmlTestMixin, RealEqualMixin
+from recipemd.pieces import *
+from recipemd.utils import XmlTestMixin, RealEqualMixin
+from recipemd.errors import *
+
 
 class IngredientTest(unittest.TestCase, XmlTestMixin, RealEqualMixin):
     def test_init(self):

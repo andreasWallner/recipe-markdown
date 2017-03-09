@@ -15,7 +15,7 @@ In the intended format, steps are grouped with the ingredients needed for those 
 inspired by the recipes used in the cookbook 'Modernist cuisine'.
 
 We prefer the format because it seems clearer, enables one to use much shorter descriptions, and to some degree also
-prevent common mistakes like ingredients missing in either the instructions or the ingredient list.
+prevents common mistakes like ingredients missing in either the instructions or the ingredient list.
 
 Usage Pattern
 -------------
@@ -103,16 +103,24 @@ As an example, a simple recipe for a quiche lorraine:
 
 Installation
 ------------
+While all scripts can be run without installation from the bin/ directory, the
+recommended way is to install the module via pip.
+
+- checkout the recipe-markdown code
+- inside the recipe-markdown directory, run `pip3 install .` (including the dot!)
+
+Installation of the Git Commit Hook
+-------------------------------
 
 Installation is pretty simple if you are using a standard git repository.
 If you manage your repositories with gitolite replace the 4th step with the
 actions appropriate for your version of gitolite (see gitolite docs).
 
 - checkout the recipe-markdown code (e.g. to /opt)
-- if necessary, make update-hook.py executable
+- if necessary, make bin/update-hook executable
 - create a new repository to hold your recipes
 - in this repositories hooks folder, create a link named "update" that links to
-  update-hook.py
+  bin/update-hook
 - copy settings\_template.py to the hooks folder and rename it to settings.py
 - edit settings.py to suite your needs
 - use recipe-markdown by pushing recipes into the repository
@@ -121,7 +129,7 @@ Fixing Problems
 ---------------
 
 If there was a problem and some recipes are not correctly updated anymore
-consider running reprocess-all.py in the hooks directory of the repository.
+consider running bin/reprocess-all in the hooks directory of the repository.
 
 It will delete all created XML files and the index and generate them anew from
 the rmd files at the current repository HEAD.

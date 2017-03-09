@@ -1,10 +1,9 @@
-import unittest
-import tempfile
-import utils
-import subprocess
 import os
-import io
-import git
+import subprocess
+import tempfile
+import unittest
+from recipemd import utils
+
 
 def _run_command(command, timeout=2000):
     environment = os.environ.copy()
@@ -28,7 +27,7 @@ def _write_file(filename, content):
 
 class tests(unittest.TestCase, utils.TypeCheckMixin):
     def _setup_target_git(self, target, outdir):
-        hook_path = os.path.abspath('./update-hook.py')
+        hook_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../bin/update-hook'))
         with utils.ChangeDir(target):
             _run_command(['git', 'init', '--bare'])
             os.symlink(hook_path, 'hooks/update')

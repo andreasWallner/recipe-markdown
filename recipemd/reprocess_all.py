@@ -1,14 +1,7 @@
-#!/usr/bin/env python3
-
+import argparse
 import os
 import sys
-import git
-import index
-import argparse
-import utils
-from lxml import etree
-
-import common
+from recipemd import utils, index, common, git
 
 # hook is being executed inside the repository, so add the hooks
 # directory to the path so that we can load our configuration from there
@@ -86,6 +79,3 @@ def main():
     index.update_json(target)
 
   return 0
-
-if __name__ == '__main__':
-    sys.exit(main())

@@ -1,7 +1,9 @@
 import unittest
-from .xml import serialize
-from pieces import *
-from utils import XmlTestMixin
+from lxml import etree
+from recipemd.pieces import *
+from recipemd.utils import XmlTestMixin
+from recipemd.serializer.xml import serialize
+
 
 class serializeTests(unittest.TestCase, XmlTestMixin):
     def test_ingredient_all(self):

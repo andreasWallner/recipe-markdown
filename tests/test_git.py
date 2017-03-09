@@ -1,9 +1,10 @@
-import unittest
-import tempfile
-import utils
+import io
+import os
 import subprocess
-import os, io
-import git
+import tempfile
+import unittest
+from recipemd import utils, git
+
 
 def _run_command(command, timeout=2000):
     environment = os.environ.copy()

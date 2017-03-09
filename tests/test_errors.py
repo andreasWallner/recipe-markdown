@@ -1,5 +1,6 @@
 import unittest
-from errors import *
+from recipemd.errors import *
+
 
 class RecipeParseErrorTest(unittest.TestCase):
     def test_init(self):

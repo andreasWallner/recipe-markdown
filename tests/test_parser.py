@@ -1,6 +1,7 @@
 import unittest
 from io import StringIO
-from parser import *
+from recipemd.parser import *
+
 
 class LineTest(unittest.TestCase):
     def test_init(self):
@@ -16,7 +17,7 @@ class LineTest(unittest.TestCase):
 
     def test_repr(self):
         l = Line(Line.Step, 23, 'mix')
-        self.assertEqual(repr(l), "Line(<class 'parser.Line.Step'>, 23, 'mix')")
+        self.assertEqual(repr(l), "Line(<class 'recipemd.parser.Line.Step'>, 23, 'mix')")
 
     def test_compare(self):
         self.assertEqual(Line(Line.Step, 23, 'mix'), Line(Line.Step, 23, 'mix'))

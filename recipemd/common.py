@@ -1,11 +1,10 @@
 import os
 import io
-import git
 import os.path
-from lxml import etree
+from recipemd.parser import parseFile
+from recipemd import git
+from recipemd.serializer.xml import dump
 
-from parser import parseFile
-from serializer.xml import dump
 
 def process(obj_id, target, xslt = None):
   """ get file from git, process, write to target folder

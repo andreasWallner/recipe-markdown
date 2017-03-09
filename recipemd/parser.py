@@ -1,8 +1,6 @@
 import re
-from pieces import *
-from errors import *
-from utils import *
-from lxml import etree
+from recipemd.pieces import *
+from recipemd.errors import *
 
 
 class Line:

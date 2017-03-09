@@ -1,8 +1,9 @@
-from . import json as js
 import json
 import unittest
-import pieces
 from io import BytesIO
+from recipemd import pieces
+import recipemd.serializer.json as js
+
 
 class tests(unittest.TestCase):
     def test_dump(self):

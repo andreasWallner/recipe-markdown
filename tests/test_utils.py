@@ -1,7 +1,6 @@
 import unittest
-import warnings
-import os
-from utils import *
+from recipemd.utils import *
+
 
 class XmlTestMixinTest(unittest.TestCase, XmlTestMixin):
     def test_match(self):
@@ -74,4 +73,4 @@ class ChangeDirTest(unittest.TestCase):
             
             self.assertEqual(len(w), 1)
             self.assertTrue(issubclass(w[-1].category, ResourceWarning))
-            self.assertIn('Implicit cleanup of <utils.ChangeDir object at', str(w[-1].message))
+            self.assertIn('Implicit cleanup of <recipemd.utils.ChangeDir object at', str(w[-1].message))
